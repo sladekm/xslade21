@@ -1,0 +1,165 @@
+EBD dataset extraction using librosa library finished in 0:23:17.
+Removed 1 corrupted tracks.
+Final track count is: 4179 tracks.
+
+
+
+EBD dataset extraction using essentia library finished in 0:17:04.
+Removed 0 corrupted tracks.
+Final track count is: 4180 tracks.
+
+
+
+FMA dataset extraction using librosa library finished in 0:47:14.
+Removed 0 corrupted tracks.
+Final track count is: 8000 tracks.
+
+
+
+FMA dataset extraction using essentia library finished in 0:24:19.
+Removed 0 corrupted tracks.
+Final track count is: 8000 tracks.
+
+
+
+GTZAN dataset extraction using librosa library finished in 0:06:15.
+Removed 0 corrupted tracks.
+Final track count is: 1000 tracks.
+
+
+
+GTZAN dataset extraction using essentia library finished in 0:04:57.
+Removed 0 corrupted tracks.
+Final track count is: 1000 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~2:04:46.Extracting features from file: "../data/local_archive/country.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/country.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/disco.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/disco.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/blues.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/blues.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/pop.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/pop.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/rock.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/rock.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/classical.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/classical.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/reggae.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/reggae.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/jazz.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/jazz.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/metal.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/metal.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/hiphop.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/hiphop.00000.wav': System error.")
+local_archive dataset extraction using essentia library finished in 0:00:00.
+Extracting features from file: "../data/local_archive/reggae.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/reggae.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/jazz.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/jazz.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/country.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/country.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/hiphop.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/hiphop.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/disco.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/disco.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/blues.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/blues.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/classical.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/classical.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/metal.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/metal.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/rock.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/rock.00000.wav': System error.")
+Extracting features from file: "../data/local_archive/pop.00000.au" with Essentia library has failed! Error: RuntimeError("Error opening '../data/tmp/pop.00000.wav': System error.")
+local_archive dataset extraction using essentia library finished in 0:00:00.
+local_archive dataset extraction using essentia library finished in 0:00:07.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:08.
+os.mkdir(../data/tmp): FileExistsError(17, 'File exists')
+local_archive dataset extraction using essentia library finished in 0:00:07.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:08.
+local_archive dataset extraction using essentia library finished in 0:00:07.
+local_archive dataset extraction using essentia library finished in 0:00:08.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:09.
+local_archive dataset extraction using librosa library finished in 0:00:08.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:09.
+local_archive dataset extraction using essentia library finished in 0:00:08.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:09.
+local_archive dataset extraction using essentia library finished in 0:00:08.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:09.
+local_archive dataset extraction using essentia library finished in 0:00:08.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:09.
+local_archive dataset extraction using essentia library finished in 0:00:07.
+Removed 0 corrupted tracks.
+Final track count is: 10 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:08.
+local_archive dataset extraction using essentia library finished in 0:00:07.
+Removed 0 corrupted tracks.
+Final track count is: 1 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:08.
+local_archive dataset extraction using essentia library finished in 0:00:09.
+Removed 0 corrupted tracks.
+Final track count is: 1 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:10.
+local_archive dataset extraction using essentia library finished in 0:00:10.
+Removed 0 corrupted tracks.
+Final track count is: 3 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:11.
+local_archive dataset extraction using essentia library finished in 0:00:44.
+Removed 0 corrupted tracks.
+Final track count is: 8 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:45.
+local_archive dataset extraction using essentia library finished in 0:00:04.
+Removed 0 corrupted tracks.
+Final track count is: 8 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:05.
+local_archive dataset extraction using essentia library finished in 0:00:04.
+Removed 0 corrupted tracks.
+Final track count is: 8 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:05.
+local_archive dataset extraction using essentia library finished in 0:00:04.
+Removed 0 corrupted tracks.
+Final track count is: 8 tracks.
+
+
+
+Feature extraction for all selected datasets and extraction libraries finished in ~0:00:06.

@@ -1,0 +1,25 @@
+Instalace:
+    1. Otevřete terminálové okno ve složce s tímto souborem
+    2. Nastavte práva pro spuštění instalačního skriptu "install.sh" příkazem "chmod 777 install.sh"
+    3. Spusťte instalační skript příkazem "./install.sh"
+
+Spuštění prostředí Jupyter lab a návod k použití projektu:
+    1. Otevřete terminálové okno ve složce s tímto souborem
+    2. Aktivujte virtuální prostředí příkazem "source ./env/bin/activate"
+    3. Spusťte aplikaci Jupyter lab příkazem "jupyter lab"
+
+    Stromovou strukturu tohoto média je možné vidět v obrázku Struktura_obsahu_média.pdf
+    Po spuštění aplikace Jupyter lab pomocí menu na levé straně obrazovky přejděte do složky project/src a dvojitým kliknutím na vybraný soubor jej otevřete.
+    Přečtěte si popis a návod u jednotlivých buněk.
+    Soubory "feature_extraction.ipynb", "feature_selection.ipynb", "parameter_tuning.ipynb", "classification.ipynb"
+    a "local_archive_predictions.ipynb" je možné spustit z horního menu aplikace možností Run -> Run All Cells
+    V souborech "track_genre_list_creation.ipynb", "misc.ipynb" a "images.ipynb" je možné jednotlivé buňky spustit jejich označením a následně
+    z horního menu aplikace možností Run -> Run Selected Cells
+    Aplikace byla testována na operačním systému Ubuntu verze 20.04
+
+    Pro spuštění na jiných Linux systémech (je nutné mít Python verze 3):
+        1. Nainstalujte tyto balíčky: npm nodejs python3-venv python3-pip ffmpeg
+        2. Otevřete terminálové okno ve složce s tímto souborem
+        3. Vytvořte virtuální prostředí příkazem "python3 -m venv env"
+        4. Aktivujte virtuální prostředí příkazem "source ./env/bin/activate"
+        5. Nainstalujte balíčky pro Python příkazem "make"

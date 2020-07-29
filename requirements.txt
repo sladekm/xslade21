@@ -1,0 +1,15 @@
+jupyterlab==2.2.2
+pandas==1.0.5
+numpy==1.19.1
+scipy==1.5.2
+soundfile==0.10.3.post1
+librosa==0.8.0
+essentia==2.1b6.dev234
+ipywidgets==7.5.1
+tqdm==4.48.0
+matplotlib==3.3.0
+seaborn==0.10.1
+scikit-learn==0.23.1
+xgboost==1.1.1
+optuna==1.5.0
+mutagen==1.45.0
