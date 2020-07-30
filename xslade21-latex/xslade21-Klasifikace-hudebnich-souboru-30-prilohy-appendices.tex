@@ -3,37 +3,41 @@
 % Rok: 2020
 %===============================================================================
 
+\hyphenation{MusicExtractor}
+
 \chapter{Přílohy k~extrakci atributů}
 \label{prilohy_k_extrakci_atributu}
 
-V~následujícím seznamu jsou uvedeny zvolené hodnoty parametrů extrakční funkce \textit{MusicExtractor} knihovny Essentia.
+V~následujícím seznamu jsou uvedeny zvolené hodnoty parametrů extrakční funkce
+
+\noindent \textit{MusicExtractor} knihovny Essentia.
 
 \begin{itemize}
     \item \textbf{'analysisSampleRate': 44100} - Vzorkovací frekvence skladeb pro analýzu, 44100 Hz (CD kvalita), skladby jsou případně převzorkovány.
     \item \textbf{'endTime': 1e+06} - Jak dlouhý úsek skladby má být analyzován, nastaveno na celou skladbu.
     \item \textbf{'gfccStats': ["mean", "cov", "icov"]} - Jaké statistické funkce použít pro zpracování hodnot gamma tónových kepstrálních koeficientů, nastaveno na průměr, kovarianci a inverzní kovarianci.
     \item \textbf{'loudnessFrameSize': 88200} - Délka okna pro časově-frekvenční analýzu pro odhad hlasitosti, nastaveno na hodnotu 88200 vzorků, což odpovídá úseku dlouhému 2 sekundy. Delší okno je vhodné pro přesnější odhad.
-    \item \textbf{'loudnessHopSize': 44100} - Posun okna pro časově-frekvenční analýzu pro odhad hlasitosti, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá z~oknem předchozím.
+    \item \textbf{'loudnessHopSize': 44100} - Posun okna pro časově-frekvenční analýzu pro odhad hlasitosti, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá s~oknem předchozím.
     \item \textbf{'lowlevelFrameSize': 2048} - Délka okna pro časově-frekvenční analýzu pro výpočet nízko-úrovňových atributů, nastaveno na hodnotu 2048 vzorků, což odpovídá úseku dlouhému 46 milisekund. Kratší okno je vhodné pro přesnější časovou analýzu.
-    \item \textbf{'lowlevelHopSize': 1024} - Posun okna pro časově-frekvenční analýzu pro výpočet nízko-úrovňových atributů, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá z~oknem předchozím.
+    \item \textbf{'lowlevelHopSize': 1024} - Posun okna pro časově-frekvenční analýzu pro výpočet nízko-úrovňových atributů, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá s~oknem předchozím.
     \item \textbf{'lowlevelSilentFrames': 'noise'} - Zpracování oken neobsahujících zvuk, ponechána výchozí hodnota 'noise' -- doplnění šumem.
-    \item \textbf{'lowlevelStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot nízkoúrovňových atributů, nastaveno na průměr, rozptyl, směrodatná odchylka, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
-    \item \textbf{'lowlevelWindowType': 'blackmanharris62'} - Typ okénkové funkce pro zpracování oken spektrogramu pro nízkoúrovňové atributy. Nastaveno typ blackmanharris62.
-    \item \textbf{'lowlevelZeroPadding': 0} - Odsazení oken pro nízkoúrovňové atributy, nepoužito.
+    \item \textbf{'lowlevelStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot nízko-úrovňových atributů, nastaveno na průměr, rozptyl, směrodatnou odchylku, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
+    \item \textbf{'lowlevelWindowType': 'blackmanharris62'} - Typ okénkové funkce pro zpracování oken spektrogramu pro nízko-úrovňové atributy. Nastaveno typ blackmanharris62.
+    \item \textbf{'lowlevelZeroPadding': 0} - Odsazení oken pro nízko-úrovňové atributy, nepoužito.
     \item \textbf{'mfccStats': ["mean", "cov", "icov"]} - Jaké statistické funkce použít pro zpracování hodnot Mel-frekvenčních kepstrálních koeficientů, nastaveno na průměr, kovarianci a inverzní kovarianci.
     \item \textbf{'profile': ''} - Profil pro načtení parametrů, nepoužito.
     \item \textbf{'requireMbid': False} - Vyžadovat tag MusicBrainz databáze, nepoužito.
     \item \textbf{'rhythmMaxTempo': 208} - Maximální hodnota tempa, nastaveno na hodnotu 208 úderů za minutu, což by mělo zamezit odhadům tempa ze čtvrtdob a podobně.
     \item \textbf{'rhythmMethod': 'degara'} - Metoda pro odhad tempa, nastaveno na metodu degara.
     \item \textbf{'rhythmMinTempo': 40} - Minimální hodnota tempa, nastaveno na hodnotu 40 úderů za minutu.
-    \item \textbf{'rhythmStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot rytmických atributů, nastaveno na průměr, rozptyl, směrodatná odchylka, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
+    \item \textbf{'rhythmStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot rytmických atributů, nastaveno na průměr, rozptyl, směrodatnou odchylku, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
     \item \textbf{'startTime': 0} - Od jakého času začít analýzu, nastaveno na hodnotu 0 sekund.
     \item \textbf{'tonalFrameSize': 4096} - Délka okna pro časově-frekvenční analýzu pro výpočet melodických atributů, nastaveno na hodnotu 4096 vzorků, což odpovídá úseku dlouhému 92 milisekund. Delší okno je vhodné pro přesnější frekvenční odhad.
-    \item \textbf{'tonalHopSize': 2048} - Posun okna pro časově-frekvenční analýzu pro výpočet melodických atributů, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá z~oknem předchozím.
+    \item \textbf{'tonalHopSize': 2048} - Posun okna pro časově-frekvenční analýzu pro výpočet melodických atributů, nastaveno na délku poloviny okna, takže se každé okno z~poloviny překrývá s~oknem předchozím.
     \item \textbf{'tonalSilentFrames': 'noise'} - Zpracování oken neobsahujících zvuk, ponechána výchozí hodnota 'noise' - doplnění šumem.
-    \item \textbf{'tonalStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot melodických atributů, nastaveno na průměr, rozptyl, směrodatná odchylka, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
+    \item \textbf{'tonalStats': ["mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2"]} - Jaké statistické funkce použít pro zpracování hodnot melodických atributů, nastaveno na průměr, rozptyl, směrodatnou odchylku, medián, minimální hodnotu, maximální hodnotu, průměr první derivace, průměr druhé derivace, rozptyl první derivace a rozptyl druhé derivace.
     \item \textbf{'tonalWindowType': 'blackmanharris62'} - Typ okénkové funkce pro zpracování oken spektrogramu pro melodické atributy. Nastaveno typ blackmanharris62.
-    \item \textbf{'tonalZeroPadding': 0} - Odsazení oken melodické atributy, nepoužito.
+    \item \textbf{'tonalZeroPadding': 0} - Odsazení oken pro melodické atributy, nepoužito.
 \end{itemize}
 
 \chapter{Přílohy k~výběru klasifikačních algoritmů a jejich parametrů}
@@ -289,7 +293,7 @@ V~následujícím seznamu jsou uvedeny zvolené hodnoty parametrů extrakční f
 
 \begin{table}[H]
 	\vskip6pt
-    \caption{\textbf{Tabulka s~podrobnými informacemi o~finální optimalizaci}}
+    \caption{\textbf{Tabulka s~podrobnými informacemi o~finální optimalizaci s využitím pětinásobné křížové validace}}
     \label{tabulka_final_optimisation_info}  
     \vskip6pt
 	\centering
@@ -328,8 +332,8 @@ V~následujícím seznamu jsou uvedeny zvolené hodnoty parametrů extrakční f
     \label{obr_matice_predikce_GTZAN}
 \end{figure*}
 
-\chapter{Obsah přiloženého CD}
-\label{obsah_prilozeneho_cd}
+\chapter{Obsah přiloženého DVD}
+\label{obsah_prilozeneho_dvd}
 
 \dirtree{%
     .1 /\DTcomment{kořenový adresář přiloženého média}.
@@ -374,19 +378,7 @@ V~následujícím seznamu jsou uvedeny zvolené hodnoty parametrů extrakční f
     .4 parameter\_tuning.ipynb\DTcomment{optimalizace parametrů}.
     .4 track\_genre\_list\_creation.ipynb\DTcomment{tvorba souborů s~informacemi o~žánrech}.
     .2 xslade21-latex\DTcomment{adresář obsahující soubory pro generaci technické zprávy}.
-    .3 bib-styles\DTcomment{adresář obsahující styly pro latex}.
-    .4 \dots.
-    .3 obrazky\DTcomment{adresář obsahující obrázky technické zprávy}.
-    .4 \dots.
-    .3 template-fig\DTcomment{adresář obsahující loga fakulty}.
-    .4 \dots.
-    .3 fitthesis.cls\DTcomment{latex třída pro technickou zprávu}.
-    .3 Makefile\DTcomment{makefile pro vytvoření technické zprávy}.
-    .3 xslade21-Klasifikace-hudebnich-souboru.tex.
-    .3 xslade21-Klasifikace-hudebnich-souboru-01-kapitoly-chapters.tex.
-    .3 xslade21-Klasifikace-hudebnich-souboru-20-literatura-bibliography.bib.
-    .3 xslade21-Klasifikace-hudebnich-souboru-30-prilohy-appendices.tex.
-    .3 zadani.pdf\DTcomment{zadání projektu}.
+    .3 \dots.
     .2 install.sh\DTcomment{skript pro instalaci potřebných knihoven}.
     .2 makefile\DTcomment{makefile pro instalaci Python knihoven (pro install.sh)}.
     .2 Návod-k-instalaci-a-použití.txt\DTcomment{Návod k~instalaci a použití}.

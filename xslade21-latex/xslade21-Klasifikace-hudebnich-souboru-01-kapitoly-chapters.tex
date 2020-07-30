@@ -13,6 +13,7 @@
 \hyphenation{RandomForestClassifier}
 \hyphenation{XGBClassifier}
 \hyphenation{HPoptimise}
+\hyphenation{MusicExtractor}
 
 \chapter{Úvod}
 \label{uvod}
@@ -24,12 +25,11 @@ V~kapitole~\ref{uvod_do_problematiky} jsou čtenáři přiblíženy základní i
 
 Kapitola~\ref{predzpracovani_dat} přibližuje čtenáři vybrané způsoby předzpracování dat vhodné pro klasifikaci hudebních souborů. Popsány jsou metody extrakce vhodných atributů ze zvukových stop a také metody selekce nejvhodnějších z~těchto atributů pro efektivní zpracování klasifikačními algoritmy. Na konci kapitoly jsou popsány nejpoužívanější z~metod kódování a škálování dat.
 
-Čtvrtá kapitola~\ref{klasifikacni_algoritmy} seznamuje čtenáře s~přístupy ke klasifikaci dat a zmíněny jsou i některé z~nejznámějších klasifikačních algoritmů. Zmíněny jsou pravděpodobnostní metody, rozhodovací stromy, metody učení založené na instancích, metody podpůrných vektorů a neuronové sítě. V~poslední podkapitole~\ref{ensemble_metody} této kapitoly jsou pak přiblíženy přístupy k~vytváření takzvaných \uv{ensemble metod}, což jsou metody kombinující několik klasifikátorů dohromady.
+Čtvrtá kapitola~\ref{klasifikacni_algoritmy} seznamuje čtenáře s~přístupy ke klasifikaci dat a také s~některými z~nejznámějších klasifikačních algoritmů. Zmíněny jsou pravděpodobnostní metody, rozhodovací stromy, metody učení založené na instancích, metody podpůrných vektorů a neuronové sítě. V~poslední podkapitole~\ref{ensemble_metody} této kapitoly jsou pak přiblíženy přístupy k~vytváření takzvaných \uv{ensemble metod}, což jsou metody kombinující několik klasifikátorů dohromady.
 
 V~kapitole~\ref{navrh_a_implementace_systemu} jsou popsány některé z~volně dostupných datových sad, které lze pro trénování modelů využít. Dále jsou popsány využité způsoby předzpracování dat, zahrnující kódování a škálování dat, extrakci atributů a selekci atributů. Zmíněn je také výběr klasifikačních algoritmů a nakonec je popsán způsob optimalizace parametrů těchto algoritmů.
 
 V~předposlední kapitole~\ref{klasifikace_a_zhodnoceni_vysledku} je pak vyhodnocena úspěšnost klasifikace na testovacích datech všech tří datových sad a v~závěrečné~\ref{zaver}. kapitole je pak shrnuta provedená práce a možnosti budoucího vývoje.
-
 
 \chapter{Úvod do problematiky}
 \label{uvod_do_problematiky}
@@ -50,12 +50,12 @@ Zvukové vlny lze popsat pomocí následujících vlastností:
     \item Vlnová délka - udává vzdálenost, kterou vlna překoná za dobu jedné její periody, měří se obvykle v~metrech a značí se $\lambda$.
 \end{itemize}
 
-Znázornění zvukových vln je možné vidět v obrázku~\ref{obr_sinusoidy}. Lidské ucho je citlivé na frekvence zvuků mezi přibližně 20 Hz a 20 kHz a změnu frekvence zvuků vnímá spíše logaritmicky, než lineárně. Stejně jako u~změn frekvence je lidské ucho citlivé i na změny tlaku logaritmicky, proto se používá pro vyjádření hlasitosti jednotka logaritmické stupnice decibel (dB). Decibel je bezrozměrná jednotka vyjadřující poměr dvou vstupních veličin. U~hlasitosti zvuků přenášených vzduchem se jako referenční vstupní hodnota používá nejnižší lidmi slyšitelná změna tlaku vzduchu.\cite{music_theory}\cite{db}
+Znázornění zvukových vln je možné vidět v~obrázku~\ref{obr_sinusoidy}. Lidské ucho je citlivé na frekvence zvuků mezi přibližně 20 Hz a 20 kHz a změnu frekvence zvuků vnímá spíše logaritmicky, než lineárně. Stejně jako u~změn frekvence je lidské ucho citlivé i na změny tlaku logaritmicky, proto se používá pro vyjádření hlasitosti jednotka logaritmické stupnice decibel (dB). Decibel je bezrozměrná jednotka vyjadřující poměr dvou vstupních veličin. U~hlasitosti zvuků přenášených vzduchem se jako referenční vstupní hodnota používá nejnižší lidmi slyšitelná změna tlaku vzduchu.\cite{music_theory}\cite{db}
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/sinusoidy.pdf}
-    \caption{\textbf{Grafy zvukových vln.} (a) Graf funkcí sinus a cosinus. Z~grafu je patrné, že funkce kosinus je fázově posunutou funkcí sínus. (b) Ukázka podélného vlnění. Částice oscilující ve směru rovnoběžném se směrem šíření vlnění tvoří místa s~vyšší koncentrací (vyšší tlak) a nižší koncentrací (nižší tlak.)}
+    \caption{\textbf{Grafy zvukových vln.} (a) Graf funkcí sinus a cosinus. Z~grafu je patrné, že funkce kosinus je fázově posunutou funkcí sínus. (b) Ukázka podélného vlnění. Částice oscilující ve směru rovnoběžném se směrem šíření vlnění tvoří místa s~vyšší koncentrací (vyšší tlak) a nižší koncentrací (nižší tlak).}
     \label{obr_sinusoidy}
 \end{figure*}
 
@@ -72,6 +72,7 @@ Digitální signál je oproti analogovému signálu funkcí diskrétního času,
 \begin{equation}
 	f_{max} < f_S/2.
 \end{equation}
+
 \medskip
 
 \noindent Pokud tento vztah dodržen není, dochází k~jevu zvanému \textit{aliasing}, kdy při vzorkování signálu dochází k~transformaci frekvencí na jiné.\cite{dsp}\cite{aca}
@@ -137,7 +138,7 @@ Práce Murauera a Spechta porovnává více způsobů klasifikace. Jedním z~nic
 
 Kaur a Kumar vybrali pro klasifikaci čtyři nízkoúrovňové vlastnosti, které na základě svého průzkumu vyhodnotili jako nejvíce přínosné. Byly to Mel-frekvenční kepstrální koeficienty, spektrální klesání, počet průchodů nulou a spektrální tok. Pro klasifikaci využili Gaussova smíšeného modelu a pro vyhodnocení výsledků využili čtyř datových sad, kde u~každé z~nich jejich způsob klasifikace dosáhl přibližně 70\% úspěšnosti.\cite{8365395}
 
-S~klasifikací do žánrů se můžeme ve výzkumech komunity získávání hudebních informací (music information retrieval, MIR) setkat nejčastěji, v~některých případech je ale možné se setkat i s~klasifikací do jiných kategorií, jako například emocí. Tento způsob zvolili ve své práci Lin, Yang, Chen, Liao a Ho, kde pro klasifikaci emocí nejprve využili klasifikace žánrů, neboť žánr je dle výsledků jejich experimentů s~emocemi do značné míry propojen. Klasifikace tedy probíhala na dvou úrovních, kdy v~první úrovni byl klasifikován žánr a v~druhé emoce. Pro klasifikaci žánrů zvolili dva způsoby, a to klasifikaci jednoho žánru a klasifikaci více žánrů, kde pravděpodobnost náležitosti k~určitému žánru byla vyjádřena procentuálně. U~obou způsobů byly následně informace získané z~klasifikace žánrů použity pro klasifikaci emocí a pro porovnání byl demonstrován i klasifikátor pracující s~reálnými informacemi o~žánru získaných z~hudebních databází. Výsledky experimentů ukázaly, že klasifikace s~využitím procentuální náležitosti k~žánrům byla jednak přesnější než klasifikace s~využitím jednoho žánru, ale také, že její úspěšnost se blížila výsledkům klasifikace s~použitím reálných informací o~žánru.\cite{5202572}
+S~klasifikací do žánrů se můžeme ve výzkumech komunity \textit{získávání hudebních informací (music information retrieval, MIR)} setkat nejčastěji, v~některých případech je ale možné se setkat i s~klasifikací do jiných kategorií, jako například emocí. Tento způsob zvolili ve své práci Lin, Yang, Chen, Liao a Ho, kde pro klasifikaci emocí nejprve využili klasifikace žánrů, neboť žánr je dle výsledků jejich experimentů s~emocemi do značné míry propojen. Klasifikace tedy probíhala na dvou úrovních, kdy v~první úrovni byl klasifikován žánr a v~druhé emoce. Pro klasifikaci žánrů zvolili dva způsoby, a to klasifikaci jednoho žánru a klasifikaci více žánrů, kde pravděpodobnost náležitosti k~určitému žánru byla vyjádřena procentuálně. U~obou způsobů byly následně informace získané z~klasifikace žánrů použity pro klasifikaci emocí a pro porovnání byl demonstrován i klasifikátor pracující s~reálnými informacemi o~žánru získaných z~hudebních databází. Výsledky experimentů ukázaly, že klasifikace s~využitím procentuální náležitosti k~žánrům byla jednak přesnější než klasifikace s~využitím jednoho žánru, ale také, že její úspěšnost se blížila výsledkům klasifikace s~použitím reálných informací o~žánru.\cite{5202572}
 
 \chapter{Předzpracovaní dat}
 \label{predzpracovani_dat}
@@ -149,7 +150,7 @@ Přestože s~využitím neuronových sítí na neupravené zvukové stopě bylo 
 \label{extrakce_atributu}
 Extrakci atributů je vhodné použít v~případě, kdy původní data jsou příliš rozsáhlá nebo obsahují redundantní či irelevantní hodnoty. Extrakce atributů si klade za cíl tato data transformovat pomocí různých funkcí na data nová, méně rozsáhlá, avšak se zachováním co největšího množství informací. Přístupů k~extrakci atributů existuje mnoho a vhodné způsoby závisí na konkrétní situaci. Existuje spousta algoritmů implementovaných pro tento účel, které jsou dostatečně obecné na to, aby se daly použít napříč řadou oborů. Mezi zmíněné metody patří například \textit{Analýza hlavních komponent (Principal component analysis, PCA)} či poměrně nová metoda \textit{Jednotná mnohočetná aproximace a projekce (Uniform manifold approximation and projection, UMAP)}.\cite{data_classification}\cite{lel2018umap}\cite{aca}
 
-V~oboru získávání hudebních informací však existuje celá řada algoritmů vytvořených specificky za účelem extrakce vhodných atributů ze zvukové stopy. Tyto atributy je pak možné rozdělit do tříd například dle úrovně abstrakce na nízkoúrovňové a vysokoúrovňové sémantické atributy, dle časového rozsahu na okamžité, segmentové či globální, případně dle aspektů hudební teorie na atributy týkající se melodie, rytmu, harmonie a dalších. Označení proměnných v rovnicích této kapitoly jsou uvedeny v tabulce~\ref{oznaceni_v_rovnicich_extrakce}.\cite{MIR}\cite{aca}
+V~oboru získávání hudebních informací však existuje celá řada algoritmů vytvořených specificky za účelem extrakce vhodných atributů ze zvukové stopy. Tyto atributy je pak možné rozdělit do tříd například dle úrovně abstrakce na nízkoúrovňové a vysokoúrovňové sémantické atributy, dle časového rozsahu na okamžité, segmentové či globální, případně dle aspektů hudební teorie na atributy týkající se melodie, rytmu, harmonie a dalších. Označení proměnných v~rovnicích této kapitoly jsou uvedeny v~tabulce~\ref{oznaceni_v_rovnicich_extrakce}.\cite{MIR}\cite{aca}
 
 \begin{table}[H]
 	\vskip6pt
@@ -180,8 +181,8 @@ V~oboru získávání hudebních informací však existuje celá řada algoritm�
 Digitální reprezentace zvukové stopy je funkcí času a jedná se tedy o~reprezentaci v~časové oblasti. Tato reprezentace zvukové stopy je vhodná pro extrakci atributů týkajících se vývoje amplitudy zvukové vlny v~čase. Frekvenční spektrum signálu v~časové oblasti je pak reprezentací tohoto signálu ve frekvenční oblasti, tedy je funkcí frekvence. Taková reprezentace je pak vhodná k~extrakci atributů týkajících se zastoupení jednotlivých frekvencí ve zvukové vlně. Zobrazení signálu v~časové a frekvenční oblasti znázorňuje obrázek~\ref{obr_casova_a_frekvencni_oblast}. U~diskrétních signálů se pro generaci frekvenčního spektra obvykle používá \textit{diskrétní Fourierova transformace (discrete Fourier transform, DFT)}. Rovnice diskrétní Fourierovy transformace má tvar
 
 \begin{equation}
-	DFT[k] = \sum\limits_{n=0}^{N-1} x[n]e^{\frac{-i2\pi kn}{N}}.
-\end{equation}\cite{MIR}\cite{mircom}\cite{aca}
+	DFT[k] = \sum\limits_{n=0}^{N-1} x[n]e^{\frac{-i2\pi kn}{N}}.\text{\cite{MIR}\cite{mircom}\cite{aca}}
+\end{equation}
 
 \medskip
 
@@ -199,7 +200,7 @@ Algoritmus \textit{STFT} nejprve rozdělí původní signál na krátké, obvykl
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/spektrogramy.pdf}
-    \caption{\textbf{Ukázka signálu v~časově-frekvenční oblasti.} Spektrogramy signálu z~obrázku~\ref{obr_casova_a_frekvencni_oblast}(a). Na rozdíl od zobrazení ve frekvenční oblasti je ze zobrazení v~časově-frekvenční oblasti možné rozpoznat rozložení frekvencí v~čase. Delší okno umožňuje přesněji určit frekvence, zatím co kratší okno umožňuje přesněji určit rozložení frekvencí v~čase. (a) Spektrogram se šířkou okna 2000 vzorků a posunem okna 1000 vzorků. (b) Spektrogram se šířkou okna 1000 vzorků a posunem okna 500 vzorků.}
+    \caption{\textbf{Ukázka signálu v~časově-frekvenční oblasti.} Spektrogramy signálu z~obrázku~\ref{obr_casova_a_frekvencni_oblast}(a). Na rozdíl od zobrazení ve frekvenční oblasti je ze zobrazení v~časově-frekvenční oblasti možné rozpoznat rozložení frekvencí v~čase. Delší okno umožňuje přesněji určit frekvence, zatím co kratší okno umožňuje přesněji určit rozložení frekvencí v~čase. (a) Spektrogram se šířkou okna 1000 vzorků a posunem okna 500 vzorků. (b) Spektrogram se šířkou okna 2000 vzorků a posunem okna 1000 vzorků.}
     \label{obr_spektrogramy}
 \end{figure*}
 
@@ -210,12 +211,12 @@ Algoritmus \textit{STFT} nejprve rozdělí původní signál na krátké, obvykl
 Nízkoúrovňové atributy lze vypočítat přímo ze zvukové stopy, či odvozeně například z~její reprezentace ve frekvenční oblasti. Tyto atributy z~pohledu uživatelů nemají velký význam, avšak počítače je jsou schopny snadno využít a dále pomocí nich vypočítat atributy vyšší úrovně. Nízkoúrovňových atributů je mnoho, proto je dále přiblíženo jen několik z~nejpoužívanějších.\cite{MIR}
 
 \subsubsection*{Mel-frekvenční kepstrální koeficienty}
-\textit{Mel-frekvenční kepstrální koeficienty (Mel-frequency cepstrum coefficients, MFCC)} jsou kompaktní formou popisu spektra stopy. Jejich výpočet probíhá filtrováním frekvenčního spektra sadou trojúhelníkových filtrů s~šířkou pásma odpovídající \textit{Mel-frekvenční škále}. Tato škála byla vytvořena tak, aby simulovala vnímání frekvencí lidským uchem. Její nárůst je lineární po 1 kHz a dále logaritmický. Pro výpočet koeficientů je pro každý z~filtrů vypočítána pásmová energie odmocněním a sečtením amplitud odpovídající části spektra. Logaritmus této energie je nakonec zpracován pomocí \textit{Diskrétní kosinové transformace (Discrete cosine transform, DCT)}, čímž je snížena míra korelace pásem způsobená částečně se překrývajícími filtry. Výpočet \textit{MFCC} se u~hudebních souborů typicky provádí nad frekvenčními spektry každého z~oken spektrogramu, nikoli nad frekvenčním spektrem celé stopy. Schéma výpočtu Mel-frekvenčních kepstrálních koeficientů je možné vidět v obrázku~\ref{obr_MFCC}.\cite{MIR}\cite{low_level}\cite{aca}
+\textit{Mel-frekvenční kepstrální koeficienty (Mel-frequency cepstrum coefficients, MFCC)} jsou kompaktní formou popisu spektra stopy. Jejich výpočet probíhá filtrováním frekvenčního spektra sadou trojúhelníkových filtrů s~šířkou pásma odpovídající \textit{Mel-frekvenční škále}. Tato škála byla vytvořena tak, aby simulovala vnímání frekvencí lidským uchem. Její nárůst je lineární po 1 kHz a dále logaritmický. Pro výpočet koeficientů je pro každý z~filtrů vypočítána pásmová energie odmocněním a sečtením amplitud odpovídající části spektra. Logaritmus této energie je nakonec zpracován pomocí \textit{Diskrétní kosinové transformace (Discrete cosine transform, DCT)}, čímž je snížena míra korelace pásem způsobená částečně se překrývajícími filtry. Výpočet \textit{MFCC} se u~hudebních souborů typicky provádí nad frekvenčními spektry každého z~oken spektrogramu, nikoli nad frekvenčním spektrem celé stopy. Schéma výpočtu Mel-frekvenčních kepstrálních koeficientů je možné vidět v~obrázku~\ref{obr_MFCC}.\cite{MIR}\cite{low_level}\cite{aca}
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/MFCC.pdf}
-    \caption{\textbf{Blokové schéma výpočtu Mel-frekvenčních kepstrálních koeficientů.} Obrázek znázorňuje výpočet \textit{MFCC} pro každé z~oken spektrogramu. \textit{Sum} značí součet, \textit{Log} značí logaritmus a \textit{DCT} značí Diskrétní kosinovou transformaci.}
+    \caption{\textbf{Blokové schéma výpočtu Mel-frekvenčních kepstrálních koeficientů.} Obrázek znázorňuje výpočet \textit{MFCC} pro každé z~oken spektrogramu. \textit{FFT} značí rychlou Fourierovu transformaci, \textit{Sum} značí součet, \textit{Log} značí logaritmus a \textit{DCT} značí Diskrétní kosinovou transformaci.}
     \label{obr_MFCC}
 \end{figure*}
 
@@ -228,12 +229,12 @@ Nízkoúrovňové atributy lze vypočítat přímo ze zvukové stopy, či odvoze
 
 \medskip
 
-\noindent kde $\alpha$ značí velikost kvantilů. Pro získání finálních hodnot spektrálního kontrastu jsou hodnoty $SC_s$ zpracovány pomocí \textit{Karhunen-Loeveovy transformace (Karhunen-Loeve transform, K-L)}. Schéma výpočtu Mel-frekvenčních kepstrálních koeficientů je možné vidět v obrázku~\ref{obr_SC}.\cite{1035731}\cite{mircom}
+\noindent kde $\alpha$ značí velikost kvantilů. Pro získání finálních hodnot spektrálního kontrastu jsou hodnoty $SC_s$ zpracovány pomocí \textit{Karhunen-Loeveovy transformace (Karhunen-Loeve transform, K-L)}. Schéma výpočtu Mel-frekvenčních kepstrálních koeficientů je možné vidět v~obrázku~\ref{obr_SC}.\cite{1035731}\cite{mircom}
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/SC.pdf}
-    \caption{\textbf{Blokové schéma výpočtu spektrálního kontrastu.} Obrázek znázorňuje výpočet spektrálního kontrastu pro každé z~oken spektrogramu. \textit{Log} značí logaritmus a \textit{K-L} značí Karhunen-Loeveovu transformaci.}
+    \caption{\textbf{Blokové schéma výpočtu spektrálního kontrastu.} Obrázek znázorňuje výpočet spektrálního kontrastu pro každé z~oken spektrogramu. \textit{FFT} značí rychlou Fourierovu transformaci, \textit{Log} značí logaritmus a \textit{K-L} značí Karhunen-Loeveovu transformaci.}
     \label{obr_SC}
 \end{figure*}
 
@@ -243,40 +244,39 @@ Nízkoúrovňové atributy lze vypočítat přímo ze zvukové stopy, či odvoze
 \begin{equation}
 	ZCR_r = \frac{1}{2} \sum\limits_{n=1}^{N} | sign(x_r(n)) - sign(x_r(n-1)) |,
 \end{equation}
-kde
+
+\medskip
+
+\noindent kde
 
 \begin{equation}
     sign(x)=
     \begin{cases}
         1 \text{\qquad pro \quad} x \geq 0,\\
-        -1 \text{\qquad pro \quad} x < 0.\\
+        -1 \text{\qquad pro \quad} x < 0. \text{\cite{MIR}\cite{zcr}\cite{low_level}\cite{mircom}\cite{aca}}
     \end{cases}
 \end{equation}
-\cite{MIR}\cite{zcr}\cite{low_level}\cite{mircom}\cite{aca}
 
 \subsubsection*{Spektrální tok}
 \textit{Spektrální tok (Spectral flux)} je atribut udávající míru korelace spekter po sobě jdoucích oken. Vysoké hodnoty spektrálního toku naznačují náhlou změnu amplitud spektra a tento atribut je tak možné využít k~detekci počátků událostí. Rovnice pro výpočet spektrálního toku $SF_r$ pro okno $r$ má tvar
 
 \begin{equation}
-	SF_r = \sum\limits_{k=1}^{K} {(|X_r(k))| - |X_{r-1}(k)|)}^2.
+	SF_r = \sum\limits_{k=1}^{K} {(|X_r(k))| - |X_{r-1}(k)|)}^2.\text{\cite{low_level}\cite{mgc}\cite{aca}}
 \end{equation}
-\cite{low_level}\cite{mgc}\cite{aca}
 
 \subsubsection*{Spektrální centroid}
 \textit{Spektrální centroid (Spectral centroid)} vyjadřuje geometrický střed distribuce spektra. Umístění centroidu ve vyšší části spektra značí přítomnost velkého počtu vysokých frekvencí. Rovnice pro výpočet centroidu má tvar
 
 \begin{equation}
-	SC_r = \frac{\sum\limits_{k=1}^{K} X_r[k] \cdot k}{\sum\limits_{k=1}^{K} X_r[k]}.
+	SC_r = \frac{\sum\limits_{k=1}^{K} X_r[k] \cdot k}{\sum\limits_{k=1}^{K} X_r[k]}.\text{\cite{low_level}\cite{mgc}\cite{mircom}\cite{aca}}
 \end{equation}
-\cite{low_level}\cite{mgc}\cite{mircom}\cite{aca}
 
 \subsubsection*{Spektrální klesání}
 \textit{Spektrální klesání (Spectral roll-off)} udává frekvenci, pod kterou spadá většina energie spektra. Většinou se uvádí hodnota 85 \%. Z~matematického hlediska se jedná o~nejvyšší frekvenci $R_r$, pro kterou platí
 
 \begin{equation}
-	\sum\limits_{k=1}^{R_r} X_r[k] \leq 0.85 \cdot \sum\limits_{k=1}^{K} X_r[k].
+	\sum\limits_{k=1}^{R_r} X_r[k] \leq 0.85 \cdot \sum\limits_{k=1}^{K} X_r[k].\text{\cite{low_level}\cite{mgc}\cite{mircom}\cite{aca}}
 \end{equation}
-\cite{low_level}\cite{mgc}\cite{mircom}\cite{aca}
 
 \subsection*{Vysokoúrovňové atributy}
 \label{vysokourovnove_atributy}
@@ -284,11 +284,11 @@ Vysokoúrovňové atributy popisují vlastnosti stopy snadno interpretovatelné 
 
 \subsubsection*{Melodie a harmonie a rytmus}
 \label{melodie_a_harmonie_a_rytmus}
-Pro extrakci výšky u~monofonních signálů se nejčastěji používají metody pro měření periodicity signálu, a to pomocí měření korelace vybraných atributů v~navazujících časových úsecích. Je také možné se setkat s~aproximací výšky pomocí ideální harmonické řady. U~polyfonních signálů se pro aproximaci všech výšek nejčastěji používají iterativní metody aproximace výšky dominantního tónu nalezením nejvýraznější základní frekvence a její harmonické řady. Tyto jsou následně odečteny od původního spektra stopy a proces je opakován, dokud nejsou aproximovány výšky všech tónů. Další způsoby spočívají v~nalezení takové sady základních frekvencí a jejich harmonických řad, pomocí které je co nejpřesněji možné aproximovat původní spektrum.\cite{MIR}\cite{low_level}\cite{aca}
+Pro extrakci výšky tónů u~monofonních signálů se nejčastěji používají metody pro měření periodicity signálu, a to pomocí měření korelace vybraných atributů v~navazujících časových úsecích. Je také možné se setkat s~aproximací výšky pomocí ideální harmonické řady. U~polyfonních signálů se pro aproximaci všech výšek tónů nejčastěji používají iterativní metody aproximace výšky dominantního tónu nalezením nejvýraznější základní frekvence a její harmonické řady. Tyto jsou následně odečteny od původního spektra stopy a proces je opakován, dokud nejsou aproximovány výšky všech tónů. Další způsoby spočívají v~nalezení takové sady základních frekvencí a jejich harmonických řad, pomocí které je co nejpřesněji možné aproximovat původní spektrum.\cite{MIR}\cite{low_level}\cite{aca}
 
 Pro následnou extrakci atributů týkajících se melodie či rytmu se používají algoritmy pro detekci počátků událostí. Tyto počátky se většinou vyznačují náhlým nárůstem amplitudy a jejich detekce tak probíhá sledováním výrazných změn energie v~časové oblasti, případně také nárůstu vysokofrekvenčních komponent. U~současných systémů pro detekci počátků je největší limitací obtížná detekce počátků u~zvukových stop, které neobsahují zdroj výrazných změn amplitud, jako jsou například perkusní nástroje. V~takovém případě pro detekci počátků mohou být využity právě hodnoty výšek tónů, kde jejich změna může značit počátek události.\cite{MIR}\cite{aca}
 
-Výše zmíněné postupy je pak možné využít k~extrakci atributů vyšší úrovně týkající se melodie či rytmu. U~extrakce melodie je stopa rozdělena na segmenty na základě detekovaných počátků. Pro každý segment je pak provedena detekce výšek tónů. Výsledkem je pak řada různých po sobě jdoucích tónu značící melodii. Detekce počátků se používá i pro extrakci atributů týkajících se rytmu. Tempo skladby je aproximováno pomocí měření periodicity těchto počátků, často je však výsledkem násobek tempa reálného, například kvůli detekci půldob. Počátky mohou být využity i pro detekci úderů perkusních nástrojů. Obrázek~\ref{obr_detekce_pocatku_a_not} znázorňuje detekci počátků a not.\cite{MIR}\cite{aca}
+Výše zmíněné postupy je pak možné využít k~extrakci atributů vyšší úrovně týkajících se melodie či rytmu. U~extrakce melodie je stopa rozdělena na segmenty na základě detekovaných počátků. Pro každý segment je pak provedena detekce výšek tónů. Výsledkem je řada různých po sobě jdoucích tónu značící melodii. Detekce počátků se používá i pro extrakci atributů týkajících se rytmu. Tempo skladby je aproximováno pomocí měření periodicity těchto počátků, často je však výsledkem násobek tempa reálného, například kvůli detekci půldob. Počátky mohou být využity i pro detekci úderů perkusních nástrojů. Obrázek~\ref{obr_detekce_pocatku_a_not} znázorňuje detekci počátků a not.\cite{MIR}\cite{aca}
 
 \begin{figure*}[h]
     \centering
@@ -299,11 +299,11 @@ Výše zmíněné postupy je pak možné využít k~extrakci atributů vyšší 
 
 \section{Selekce atributů}
 \label{selekce_atributu}
-Selekce atributů je dalším ze způsobů dimenzionální redukce a steně jako u~extrakce atributů je jejím cílem odstranit redundantní či irelevantní data. Na rozdíl od extrakce atributů, jejíž výstupem jsou transformovaná data pomocí funkcí, výstupem této metody je podmnožina dat původních. Selekci je možné provádět manuálně či algoritmicky, dále bude rozebrána pouze druhá z~těchto variant. Metody selekce je možné rozdělit na základě jejich přístupu k~vyhodnocení vhodných atributů, a to na metody filtrační, obalovací a vestavěné. Diagram těchto metod je možné vidět v obrázku~\ref{obr_selekce_atributu}.\cite{data_classification}\cite{aca}
+Selekce atributů je dalším ze způsobů dimenzionální redukce a steně jako u~extrakce atributů je jejím cílem odstranit redundantní či irelevantní data. Na rozdíl od extrakce atributů, jejíž výstupem jsou transformovaná data pomocí funkcí, výstupem této metody je podmnožina dat původních. Selekci je možné provádět manuálně či algoritmicky, dále bude rozebrána pouze druhá z~těchto variant. Metody selekce je možné rozdělit na základě jejich přístupu k~vyhodnocení vhodných atributů, a to na metody filtrační, obalovací a vestavěné. Diagram těchto metod je možné vidět v~obrázku~\ref{obr_selekce_atributu}.\cite{data_classification}\cite{aca}
 
 \subsection*{Filtrační metody}
 \label{filtracni_metody}
-Filtrační metody se skládají ze dvou kroků, kde v~prvním kroku je vhodnost atributů vyhodnocena pomocí některé z~metrik jako vzdálenost, korelace, vzájemná informace nebo konzistence. V~druhém kroku je pak vybrán stanovený počet atributů s~nejvyšším hodnocením pro předání klasifikačním algoritmům. Atributy mohou být vyhodnoceny samostatně nebo v~kontextu množiny atributů, kde v~druhém případě jsou pak metody schopny rozpoznat redundantní data. Tyto metody nezávisí na žádném klasifikačním algoritmu a jsou tak obecně schopny lépe popsat vztah mezi atributy.\cite{data_classification}\cite{data_preprocessing}\cite{aca}
+Filtrační metody se skládají ze dvou kroků, kde v~prvním kroku je vhodnost atributů vyhodnocena pomocí některé z~metrik jako \textit{vzdálenost}, \textit{korelace}, \textit{vzájemná informace} nebo \textit{konzistence}. V~druhém kroku je pak vybrán stanovený počet atributů s~nejvyšším hodnocením pro předání klasifikačním algoritmům. Atributy mohou být vyhodnoceny samostatně nebo v~kontextu množiny atributů, kde v~druhém případě jsou pak metody schopny rozpoznat redundantní data. Tyto metody nezávisí na žádném klasifikačním algoritmu a jsou tak obecně schopny lépe popsat vztah mezi atributy.\cite{data_classification}\cite{data_preprocessing}\cite{aca}
 
 \subsection*{Obalovací metody}
 \label{obalovaci_metody}
@@ -315,19 +315,19 @@ Vestavěné metody stejně jako metody obalovací pro vyhodnocení vhodnosti atr
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{obrazky/selekce_atributu.pdf}
-    \caption{\textbf{Diagram metod selekce atributů.} (a) Diagram průběhu filtračních metod. Selekce probíhá zcela nezávislá na vybraném klasifikačním algoritmu. (b) Diagram obalovacích metod. Úspěšnost selekce je vyhodnocována pomocí vybraného klasifikačního algoritmu. Není však jeho součástí. (c) Diagram vestavěných metod. Selekce je přímo součástí klasifikačního algoritmu.}
+    \caption{\textbf{Diagram metod selekce atributů.} (a) Diagram průběhu filtračních metod. Selekce probíhá zcela nezávisle na vybraném klasifikačním algoritmu. (b) Diagram obalovacích metod. Úspěšnost selekce je vyhodnocována pomocí vybraného klasifikačního algoritmu. Není však jeho součástí. (c) Diagram vestavěných metod. Selekce je přímo součástí klasifikačního algoritmu.}
     \label{obr_selekce_atributu}
 \end{figure}
 
 \section{Kódování kategorických dat}
 \label{kodovani_kategorickych_dat}
-Kategorická data často bývají ve formě textových řetězců, a protože většina klasifikátorů textová data zpracovat neumí, může být nutné je nejprve převést do číselné podoby. Nejprve je potřeba určit, jestli kategorická data jsou ordinální či nominální. Nominální kategorická data jsou taková, která mezi sebou nelze porovnat, protože nezastávají žádnou hodnotu. Příkladem nominálních kategorických dat může být například barva. Oproti tomu ordinální data lze porovnat nebo je seřadit. Příkladem ordinálních dat může být například vzdělání, kde vysokoškolské vzdělání má vyšší hodnotu, než vzdělání středoškolské. Nominální kategorická data není vhodné zakódovat tak, aby výsledné hodnoty byly ordinální. V~následujících odstavcích jsou popsány nejpoužívanější způsoby kódování. Ukázky kódování kategorických dat je možné vidět v tabulce~\ref{ukazka_kodovani_kategorickyc_dat}.\cite{cat_var_enc1}
+Kategorická data často bývají ve formě textových řetězců, a protože většina klasifikátorů textová data zpracovat neumí, může být nutné je nejprve převést do číselné podoby. Nejprve je potřeba určit, jestli kategorická data jsou ordinální či nominální. Nominální kategorická data jsou taková, která mezi sebou nelze porovnat, protože nezastávají žádnou hodnotu. Příkladem nominálních kategorických dat může být například barva. Oproti tomu ordinální data lze porovnat nebo je seřadit. Příkladem ordinálních dat může být například vzdělání, kde vysokoškolské vzdělání má vyšší hodnotu, než vzdělání středoškolské. Nominální kategorická data není vhodné zakódovat tak, aby výsledné hodnoty byly ordinální. V~následujících odstavcích jsou popsány nejpoužívanější způsoby kódování. Ukázky kódování kategorických dat je možné vidět v~tabulce~\ref{ukazka_kodovani_kategorickyc_dat}.\cite{cat_var_enc1}
 
 \textit{Ordinální kódování (ordinal encoding)} je vhodné pro ordinální data a funguje na principu přiřazení unikátní číselné hodnoty každé z~možných kategorických hodnot. Tato přiřazená číselná hodnota musí odpovídat důležitosti původní kategorické hodnoty. Výhodou tohoto způsobu kódování je, že nezvyšuje velikost dat.\cite{cat_var_enc1}
 
 \textit{Binární kódování (Binary encoding)} nejprve transformuje atributy na jejich číselné reprezentace, následně tyto převede do binární podoby a nakonec vytvoří vektor jedniček a nul pro každý řád hodnot binární reprezentace. Výsledkem je tedy vektor o~délce počtu prvků v~kódovaných datech a počet těchto vektorů je $log_2(N)$, kde $N$ vyjadřuje počet unikátních kategorických hodnot.\cite{cat_var_enc2}
 
-\textit{One-hot kódování (One-hot encoding)} transformuje každou kategorickou hodnotu na vektor jedniček a nul od délce rovné počtu prvků v~kódovaných datech, kde jednička u~příslušného prvku značí přítomnost dané kategorické hodnoty a nula naopak. Pokud označíme počet unikátních kategorických hodnot písmenem $N$, výsledný počet těchto vektorů bude $N-1$, protože jeden z~vektorů je vždy možné odvodit z~vektorů ostatních a typicky tak bývá odstraněn. Nevýhody tohoto kódování spočívají ve velkém nárůstu dat a s~tím spojenou možností představení fenoménu \uv{řídkých dat}. Tento způsob kódování tak není vhodné použít pro velký počet kategorických dat.\cite{cat_var_enc1}\cite{cat_var_enc2}
+\textit{One-hot kódování (One-hot encoding)} transformuje každou kategorickou hodnotu na vektor jedniček a nul od délce rovné počtu prvků v~kódovaných datech, kde jednička u~příslušného prvku značí přítomnost dané kategorické hodnoty a nula naopak. Pokud označíme počet unikátních kategorických hodnot písmenem $N$, výsledný počet těchto vektorů bude $N-1$, protože jeden z~vektorů je vždy možné odvodit z~vektorů ostatních a typicky tak bývá odstraněn. Nevýhody tohoto kódování spočívají ve velkém nárůstu dat a s~tím spojenou možností představení fenoménu \textit{řídkých dat (sparse data)}. Tento způsob kódování tak není vhodné použít pro velký počet kategorických dat.\cite{cat_var_enc1}\cite{cat_var_enc2}
 
 \begin{table}[H]
 	\vskip6pt
@@ -348,7 +348,7 @@ Kategorická data často bývají ve formě textových řetězců, a protože v�
 
 \section{Škálování dat}
 \label{skalovani_dat}
-Vstupní data často bývají ve formě, kde hodnoty jednoho atributu jsou řádově jinde, než hodnoty atributu jiného. Některé z~klasifikačních algoritmů pak mohou mít problém takovým atributům přiřadit adekvátní váhu. Z~tohoto důvodu se v~praxi můžeme u~předzpracování dat setkat se \textit{škálováním dat (data scaling)}. V~následujících odstavcích jsou dále přiblíženy nejpoužívanější z~těchto metod. Metody škálování dat jsou znázorněny v obrázku~\ref{obr_sklaovani_dat}.\cite{data_mining}\cite{data_preprocessing}
+Vstupní data často bývají ve formě, kde hodnoty jednoho atributu jsou řádově jinde, než hodnoty atributu jiného. Některé z~klasifikačních algoritmů pak mohou mít problém takovým atributům přiřadit adekvátní váhu. Z~tohoto důvodu se v~praxi můžeme u~předzpracování dat setkat se \textit{škálováním dat (data scaling)}. V~následujících odstavcích jsou dále přiblíženy nejpoužívanější z~těchto metod. Metody škálování dat jsou znázorněny v~obrázku~\ref{obr_sklaovani_dat}.\cite{data_mining}\cite{data_preprocessing}
 
 Jedna z~metod škálování je metoda \textit{min-max normalizace}, kde jsou data lineárně transformována do určitého intervalu, obvykle $\langle$0, 1$\rangle$. Rovnice pro převod hodnoty $x_i$ z~množiny $X$ do intervalu $\langle$a, b$\rangle$ má tvar
 
@@ -360,7 +360,7 @@ Jedna z~metod škálování je metoda \textit{min-max normalizace}, kde jsou dat
 
 \noindent kde funkce $min()$ a $max()$ vracejí nejnižší a nejvyšší hodnotu ze vstupní množiny. Tato metoda je však citlivá na \textit{odlehlé hodnoty (outliers)}.\cite{data_mining}\cite{data_preprocessing}
 
-Další metoda se nazývá \textit{Z-score normalizace} jejím cílem je transformovat vstupní hodnoty tak, aby jejich průměr byl roven nule a standardní deviace rovna jedné. Rovnice Z-score normalizace má tvar
+Další metoda se nazývá \textit{Z-score normalizace} jejím cílem je transformovat vstupní hodnoty tak, aby jejich průměr byl roven nule a směrodatná odchylka rovna jedné. Rovnice Z-score normalizace má tvar
 
 \begin{equation}
 	x'_i = \frac{x_i - mean(X)}{std(X)},
@@ -368,7 +368,7 @@ Další metoda se nazývá \textit{Z-score normalizace} jejím cílem je transfo
 
 \medskip
 
-\noindent kde funkce $mean()$ vrací průměrnou hodnotu a funkce $std()$ vrací hodnotu standardní deviace vstupního vektoru hodnot.\cite{data_mining}\cite{data_preprocessing}
+\noindent kde funkce $mean()$ vrací průměrnou hodnotu a funkce $std()$ vrací hodnotu směrodatné odchylky vstupního vektoru hodnot.\cite{data_mining}\cite{data_preprocessing}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{obrazky/skalovani.pdf}
@@ -387,9 +387,8 @@ Klasifikace je proces učení s~učitelem, tedy algoritmy při učení pracují 
 \textit{Naivní Bayesův klasifikátor (Naive Bayes classifier)} je generalizační model, který pro klasifikaci využívá Bayesova teorému. Naivní se nazývá pro to, že předpokládá takzvanou \textit{podmíněnou nezávislost}. Tedy, pokud je již dána třída, předpokládá, že všechny atributy klasifikovaného prvku jsou vzájemně nezávislé. Pokud jako $x_n$ označíme $n$-tý z~$N$ atributů klasifikovaného prvku $X$, pak rovnice Naivního Bayesova klasifikátoru má tvar
 
 \begin{equation}
-	NB(X) = \underset{C_k}{argmax}(P(C_k) \prod\limits_{n=0}^{N-1} P(x_n|C_k)).
+	NB(X) = \underset{C_k}{argmax}(P(C_k) \prod\limits_{n=0}^{N-1} P(x_n|C_k)).\text{\cite{data_classification}\cite{machine_learning}}
 \end{equation}
-\cite{data_classification}\cite{machine_learning}
 
 \medskip
 
@@ -417,9 +416,7 @@ Klasifikace je proces učení s~učitelem, tedy algoritmy při učení pracují 
 
 \medskip
 
-\noindent kde $\{\theta_0, \dots, \theta_N\}$ značí parametry logistické funkce. Pro nalezení adekvátních hodnot těchto parametrů se používá \textit{metoda maximální věrohodnosti}. Pro klasifikaci do více tříd lze využít metodu \textit{jeden proti všem (one-vs-all)}, nebo upravenou verzi logistické regrese nazývanou \textit{Multinomiální logistická regrese}.
-
-\cite{data_classification}\cite{understanding_machine_learning}
+\noindent kde $\{\theta_0, \dots, \theta_N\}$ značí parametry logistické funkce. Pro nalezení adekvátních hodnot těchto parametrů se používá \textit{metoda maximální věrohodnosti}. Pro klasifikaci do více tříd lze využít metodu \textit{jeden proti všem (one-vs-all)}, nebo upravenou verzi logistické regrese nazývanou \textit{Multinomiální logistická regrese}.\cite{data_classification}\cite{understanding_machine_learning}
 
 \section{Rozhodovací stromy}
 \label{rozhodovaci_stromy}
@@ -439,15 +436,15 @@ Klasifikace je proces učení s~učitelem, tedy algoritmy při učení pracují 
 
 \medskip
 
-\noindent kde $p(C_k)$ vyjadřuje pravděpodobnost klasifikace do třídy $C_k$ z~celkového počtu $K$ tříd. Entropie se používá pro výpočet informačního zisku, který pro vyhodnocení vhodnosti atributu pro dělení uzlu používají například algoritmy \textit{ID3} a \textit{C4.5}. Gini index pak pro toto vyhodnocení používá například algoritmus \textit{CART}.
+\noindent kde $p(C_k)$ vyjadřuje pravděpodobnost klasifikace do třídy $C_k$ z~celkového počtu $K$ tříd. Entropie se používá pro výpočet informačního zisku, který pro vyhodnocení vhodnosti atributu pro dělení uzlu používají algoritmy \textit{ID3} a \textit{C4.5}. Gini index pak pro toto vyhodnocení používá algoritmus \textit{CART}.
 
-Dělení uzlů probíhá, dokud není splněno jedno z~ukončovacích kritérií. Ukončovacím kritériem může být například náležitost všech prvků v~uzlu ke stejné třídě. V~praxi se však obvykle používají jiná kritéria, jako náležitost určité části prvků uzlu ke stejné třídě, či pouze určitý počet prvků v~uzlu. Tyto navíc pomáhají zamezit přetrénovaní modelu. Není však možné předem určit hodnoty těchto kritérií tak, aby byl růst stromu zastaven ve vhodnou chvíli. Tento problém řeší metoda \textit{prořezávání stromu (tree pruning)}, která zpětně prochází vytvořený strom a odstraňuje uzly, které by k~přetrénování mohly vést. Jedním ze způsobů prostřihávání stromů je například vyčlenění části trénovacích dat a jejich následné použití při vyhodnocování úspěšnosti klasifikace stromů po odstranění určitých uzlů.\cite{data_classification}\cite{understanding_machine_learning}\cite{strojove_uceni}\cite{machine_learning}
+Dělení uzlů probíhá, dokud není splněno jedno z~ukončovacích kritérií. Ukončovacím kritériem může být například náležitost všech prvků v~uzlu ke stejné třídě. V~praxi se však obvykle používají jiná kritéria, jako náležitost určité části prvků uzlu ke stejné třídě, či pouze určitý počet prvků v~uzlu. Tyto navíc pomáhají zamezit přetrénovaní modelu. Není však možné předem určit hodnoty těchto kritérií tak, aby byl růst stromu zastaven ve vhodnou chvíli. Tento problém řeší metoda \textit{prořezávání stromu (tree pruning)}, která zpětně prochází vytvořený strom a odstraňuje uzly, které by k~přetrénování mohly vést. Jedním ze způsobů prostřihávání stromů je vyčlenění části trénovacích dat a jejich následné použití při vyhodnocování úspěšnosti klasifikace stromů po odstranění určitých uzlů.\cite{data_classification}\cite{understanding_machine_learning}\cite{strojove_uceni}\cite{machine_learning}
 
 \section{Učení založené na instancích}
 \label{uceni_zalozene_na_instancich}
 Metody \textit{učení založené na instancích (instance based learning)} fungují na principu vyhodnocení podobnosti klasifikovaného prvku mezi již známými prvky (instancemi) z~trénovacích dat, a to za pomoci vybrané metriky. Tyto metody na základě trénovacích dat nevytváří model, pouze tato data uloží a samotná klasifikace proběhne až ve chvíli, kdy je metodě předán prvek z~dat testovacích. Tento přístup se nazývá \textit{líné učení (lazy learning)}. Tyto metody mají řadu výhod, jednak pro klasifikaci využívají pouze část všech dat, což umožňuje snadněji klasifikovat velmi rozsáhlá data, dále každý nový prvek z~testovacích dat je možné zařadit mezi již známé prvky dat trénovacích. To může vylepšit úspěšnost klasifikace a také umožní klasifikovat i třídy, které trénovací data neobsahovala. Mezi nevýhody tohoto přístupu se řadí vysoká citlivost na irelevantní data a nevyváženost počtu prvků v~jednotlivých třídách.\cite{data_classification}\cite{machine_learning}\cite{strojove_uceni}
 
-Nejznámější z~metod založených na instancích je metoda \textit{K-nejbližších sousedů (K-nearest neighbors)}. Tato metoda je založena na předpokladu, že podobnost dvou prvků může být vyjádřena pomocí jejich vzdálenosti v~prostoru prvků. Metrikou pro vyhodnocení podobnosti je \textit{Euklidovská vzdálenost}, jejíž rovnice má tvar
+Nejznámější z~metod založených na instancích je metoda \textit{K-nejbližších sousedů (K-nearest neighbors)}. Tato metoda je založena na předpokladu, že podobnost dvou prvků může být vyjádřena pomocí jejich vzdálenosti v~prostoru prvků. Metrikou pro vyhodnocení podobnosti je například \textit{Euklidovská vzdálenost}, jejíž rovnice má tvar
 
 \begin{equation}
     d(X, Y) = \sqrt{\sum\limits_{n=0}^{N-1} ((x_n)-(y_n))^2},
@@ -455,12 +452,12 @@ Nejznámější z~metod založených na instancích je metoda \textit{K-nejbliž
 
 \medskip
 
-\noindent kde $d(X, Y)$ značí výslednou vzdálenost mezi prvkem $X$ s~atributy $\{x_0, \dots, x_{N-1}\}$ a prvkem $Y$ s~atributy $\{y_0, \dots, y_{N-1}\}$. Při klasifikaci nového prvku tato metoda pomocí dané metriky nalezne $k$ nejbližších prvků, a na základě nejčastěji se vyskytující třídy mezi těmito prvky přiřadí třídu prvku novému. Princip fungování metody K-nejbližších sousedů je znázorněn v obrázku~\ref{obr_knn}.\cite{strojove_uceni}\cite{machine_learning}
+\noindent kde $d(X, Y)$ značí výslednou vzdálenost mezi prvkem $X$ s~atributy $\{x_0, \dots, x_{N-1}\}$ a prvkem $Y$ s~atributy $\{y_0, \dots, y_{N-1}\}$. Při klasifikaci nového prvku tato metoda pomocí dané metriky nalezne $k$ nejbližších prvků, a na základě nejčastěji se vyskytující třídy mezi těmito prvky přiřadí třídu prvku novému. Princip fungování metody K-nejbližších sousedů je znázorněn v~obrázku~\ref{obr_knn}.\cite{strojove_uceni}\cite{machine_learning}
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/knn.pdf}
-    \caption{\textbf{Ukázka klasifikace pomocí metody K-nejbližších sousedů.} V~obrázcích je znázorněn prostor prvků definovaný dvěma atributy. (a) Ukázka metody s hodnotou $k = 5$. Klasifikovaný prvek reprezentovaný zeleným čtvercem by v~tomto případě byl klasifikován jako modrý kruh. (b) Ukázka metody s hodnotou $k = 7$. Klasifikovaný prvek reprezentovaný zeleným čtvercem by v~tomto případě byl klasifikován jako červený trojúhelník.}
+    \caption{\textbf{Ukázka klasifikace pomocí metody K-nejbližších sousedů.} V~obrázcích je znázorněn prostor prvků definovaný dvěma atributy. (a) Ukázka metody s~hodnotou $k = 5$. Klasifikovaný prvek reprezentovaný zeleným čtvercem by v~tomto případě byl klasifikován jako modrý kruh. (b) Ukázka metody s~hodnotou $k = 7$. Klasifikovaný prvek reprezentovaný zeleným čtvercem by v~tomto případě byl klasifikován jako červený trojúhelník.}
     \label{obr_knn}
 \end{figure*}
 
@@ -481,9 +478,9 @@ V~případě, kdy jsou prvky lineárně neseparovatelné a není možné umísti
 
 \section{Neuronové sítě}
 \label{neuronove_site}
-\textit{Neuronové sítě (Neural networks)} simulují biologické struktury lidského mozku. Architekturu neuronových sítí tvoří neurony a propojení mezi nimi. Neurony se podle funkce, kterou v~síti vykonávají, dělí na vstupní, výstupní a výpočetní. Mohou však plnit více funkcí najednou. Výpočetní neurony jsou základní výpočetní jednotky neuronových sítí. Jejich vstupem je několik hodnot a jim přiřazených vah, které transformují na výstupní hodnotu pomocí dvou funkcí. První funkce zpracuje vstupní hodnoty a váhy výsledek předá druhé funkci, která se nazývá \textit{aktivační funkce (activation function)}, která jej transformuje na výstupní hodnotu neuronu. Model neuronu je možné vidět v obrázku~\ref{obr_neuron}.\cite{data_classification}\cite{machine_learning}
+\textit{Neuronové sítě (Neural networks)} simulují biologické struktury lidského mozku. Architekturu neuronových sítí tvoří neurony a propojení mezi nimi. Neurony se podle funkce, kterou v~síti vykonávají, dělí na vstupní, výstupní a výpočetní. Mohou však plnit více funkcí najednou. Výpočetní neurony jsou základní výpočetní jednotky neuronových sítí. Jejich vstupem je několik hodnot a jim přiřazených vah, které transformují na výstupní hodnotu pomocí dvou funkcí. První funkce zpracuje vstupní hodnoty a váhy výsledek předá druhé funkci, která se nazývá \textit{aktivační funkce (activation function)}, která jej transformuje na výstupní hodnotu neuronu. Model neuronu je možné vidět v~obrázku~\ref{obr_neuron}.\cite{data_classification}\cite{machine_learning}
 
-Neuronová síť se obvykle skládá z~několika vrstev, a to vrstvy vstupní, vrstev skrytých a vrstvy výstupní. Trénování takovýchto neuronových sítí pak probíhá ve dvou fázích, kde v~první se vstupní hodnoty postupně transformují a propagují dále v~síti až do výstupní vrstvy a v~druhé se v~případě chybné klasifikace upraví váhy a \textit{biasy} příslušných neuronů pomocí metody zpětné propagace. Rychlost trénování je možné ovlivnit pomocí parametru $\lambda$. V~praxi se nejdříve parametru $\lambda$ přiřadí vyšší hodnota, což vede k~rychlejšímu nalezení hodnot vah blízkých hodnotám optimálním a následně se $\lambda$ snižuje, kvůli zabránění oscilace okolo optimálních hodnot vah.\cite{data_classification}\cite{machine_learning}
+Neuronová síť se obvykle skládá z~několika vrstev, a to vrstvy vstupní, vrstev skrytých a vrstvy výstupní. Trénování takovýchto neuronových sítí pak probíhá ve dvou fázích, kde v~první se vstupní hodnoty postupně transformují a propagují dále v~síti až do výstupní vrstvy a v~druhé se v~případě chybné klasifikace upraví váhy příslušných neuronů pomocí metody zpětné propagace. Rychlost trénování je možné ovlivnit pomocí parametru $\lambda$. V~praxi se nejdříve parametru $\lambda$ přiřadí vyšší hodnota, což vede k~rychlejšímu nalezení hodnot vah blízkých hodnotám optimálním a následně se $\lambda$ snižuje, kvůli zabránění oscilace okolo těchto optimálních hodnot.\cite{data_classification}\cite{machine_learning}
 
 Pro klasifikaci do více tříd pak lze využít metodu jeden proti všem, nebo navrhnout architekturu sítě tak, aby počet neuronů ve výstupní vrstvě odpovídal počtu klasifikovaných tříd. Výhody neuronových sítí spočívají jejich široké oblasti uplatnění, schopnosti zpracovat rozsáhlá data a jejich schopnosti implicitně provádět dimenzionální redukci. Nevýhody spočívají ve vyšší citlivosti na irelevantní data a možnosti přetrénování.\cite{data_classification}\cite{machine_learning}
 
@@ -512,13 +509,13 @@ Bagging metodu využívá například meta-klasifikátor \textit{Náhodný les (
 
 \textit{Adaptive boosting (AdaBoost)} je metoda, která v~každé iteraci přidá nový slabý klasifikátor a následně zjistí, které z~prvků je schopen klasifikovat správně a které chybně. Na základě toho pak přiřadí vyšší váhu prvkům, které klasifikátor přidaný v~poslední iteraci klasifikoval chybně a naopak. To zajistí, že klasifikátor v~následující iteraci bude mít vyšší pravděpodobnost správně klasifikovat prvky, které byly v~poslední iteraci klasifikovány chybně. Nakonec také stejným způsobem upraví váhy přiřazené samotným klasifikátorům na základě jejich úspěšnosti predikce. Tento iterativní proces je opakován, dokud je možné najít klasifikátor s~vyšší úspěšností predikce, než je náhodná šance. Nakonec jsou sečteny všechny váhy klasifikátorů, jež prvku přiřadili stejnou třídu a samotnému prvku je přiřazena třída, jejíž součet vah je nejvyšší.
 
-\textit{Gradient boosting (GBM)} v~první iteraci přidá jeden slabý klasifikátor a pro každý prvek vypočítá hodnoty směrodatné odchylky. Pro každý prvek je tedy vypočítána míra chybovosti predikce. V~následujících iteracích pak algoritmus \textit{GBM} využije sadu atributů nikoli k~predikci třídy, ale k~predikci právě této míry chybovosti klasifikace každého z~prvků z~předchozí iterace. Postupným přidáváním základních klasifikátorů a predikováním chybovosti tak tato metoda v~každé iteraci snižuje míru chybovosti predikce. Bez včasného zastavení či regularizace je však na rozdíl od metody \textit{Bagging} náchylná na přetrénování.
+\textit{Gradient boosting (GBM)} v~první iteraci přidá jeden slabý klasifikátor a pro každý prvek vypočítá hodnoty gradientu správné a predikované hodnoty. Pro každý prvek je tedy vypočítána míra chybovosti predikce. V~následujících iteracích pak algoritmus \textit{GBM} využije sadu atributů nikoli k~predikci třídy, ale k~predikci právě tohoto gradientu pro každý z~prvků z~předchozí iterace. Postupným přidáváním základních klasifikátorů tímto způsobem tak tato metoda v~každé iteraci míru chybovosti snižuje. Bez včasného zastavení či regularizace je však na rozdíl od metody \textit{Bagging} náchylná na přetrénování.
 
 \subsection*{Stacking}
 \label{stacking}
 \textit{Stacking} je metoda, která pro vyhodnocení predikcí základních klasifikátorů využívá dalšího klasifikátoru. Základní klasifikátory se u~této metody obvykle nazývají klasifikátory první úrovně a klasifikátor vyhodnocující jejich výsledky se nazývá klasifikátor druhé úrovně. Zatím co vstupem klasifikátorů první úrovně jsou atributy původní datové sady, vstupem klasifikátoru druhé úrovně jsou predikované třídy klasifikátorů první úrovně. Klasifikátor druhé úrovně se tedy učí, jak zpracovat výsledky základních klasifikátorů. Klasifikátory obou úrovní mohou být i jiné ensemble klasifikátory.\cite{data_classification}
 
-Protože použití metody \textit{Stacking} může často vést k~přetrénování modelu, obvykle bývá pro trénování využita metoda křížové validace. Pokud model obsahuje $k$ základních klasifikátorů, je původní datová sada rozdělena do $k$ částí a každému základnímu klasifikátoru je přiřazena jedna z~těchto částí jako validační datová sada. Každý z~klasifikátorů první úrovně je následně natrénován na zbylých $k-1$ sadách. Výsledky klasifikace základních klasifikátorů na validační sadě jsou pak použity pro natrénování klasifikátoru druhé úrovně. Tímto způsobem tak nejsou využita stejná trénovací data pro klasifikátory obou úrovní, což zamezí možnosti přetrénování.\cite{data_classification}
+Protože použití metody \textit{Stacking} může často vést k~přetrénování modelu, obvykle bývá pro trénování využita metoda křížové validace. Pokud model obsahuje $k$ základních klasifikátorů, je původní datová sada rozdělena do $k$ částí a každému základnímu klasifikátoru je přiřazena jedna z~těchto částí jako validační datová sada. Každý z~klasifikátorů první úrovně je následně natrénován na zbylých $k-1$ sadách. Výsledky klasifikace základních klasifikátorů na jim přiřazené validační sadě jsou pak použity pro natrénování klasifikátoru druhé úrovně. Tímto způsobem tak nejsou využita stejná trénovací data pro klasifikátory obou úrovní, což zamezí možnosti přetrénování.\cite{data_classification}
 
 
 
@@ -545,17 +542,19 @@ Protože použití metody \textit{Stacking} může často vést k~přetrénován
 
 \chapter{Návrh a implementace systému}
 \label{navrh_a_implementace_systemu}
-Cílem této práce je vytvořit systém pro klasifikaci hudebních souborů s~co nejvyšší úspěšností. Proto byl vytvořen tak, aby bylo možné porovnat úspěšnost klasifikace několika z~nejpoužívanějších klasifikátorů a pro následnou optimalizaci pak vybrat nejúspěšnější z~nich. Zároveň byly vybrány tři datové sady s~různým způsobem kategorizace a dvě knihovny pro extrakci atributů. V~první podkapitole jsou blíže popsány vybrané datové sady, ve druhé podkapitole je popsán způsob předzpracování dat a výběr klasifikačních algoritmů a v~poslední podkapitole je popsán způsob optimalizace parametrů klasifikačních algoritmů.
+Cílem této práce je vytvořit systém pro klasifikaci hudebních souborů s~co nejvyšší úspěšností. Proto byl vytvořen tak, aby bylo možné porovnat úspěšnost klasifikace několika z~nejpoužívanějších klasifikátorů a pro následnou optimalizaci pak vybrat nejúspěšnější z~nich. Zároveň byly vybrány tři datové sady s~různým způsobem kategorizace a dvě knihovny pro extrakci atributů. V~první podkapitole jsou blíže popsány vybrané datové sady, ve druhé podkapitole je popsán výběr klasifikačních algoritmů a jejich parametrů, třetí kapitola popisuje zvolené metody předzpracování dat a poslední podkapitola se věnuje způsobu optimalizace parametrů klasifikačních algoritmů.
 
 Výpočty probíhaly na osobním počítači s~osmijádrovým procesorem Intel 9700K s~taktovací frekvencí 3.60 GHz a možností přetaktování až na 4.90 GHz. Procesor má k~dispozici 16 GB operační paměti DDR4. Pro akceleraci algoritmů byl využit grafický čip Nvidia Geforce GTX 1080Ti s~3584 jádry CUDA a 11GB GDDR5 video paměti. Na stroji byl nainstalován 64 bitový operační systém Linux Ubuntu (verze~20.04).
 
-Pro implementaci byl zvolen jazyk Python (verze~3.8) a vývojové prostředí Jupyter lab, kvůli jeho možnostem snadné vizualizace dat. Implementace byla rozdělena do pěti částí, a to tvorba seznamů skladeb a jim přiřazených žánrů, extrakce atributů, selekce atributů, optimalizace parametrů klasifikačních algoritmů, klasifikace, která zároveň umožňuje vizualizovat výsledky a porovnat úspěšnost klasifikačních algoritmů na jednotlivých sadách atributů a nakonec samotná predikce skladeb z~lokálního archivu pomocí natrénovaných klasifikátorů. Struktura projektu je uvedena v příloze~\ref{obsah_prilozeneho_cd}.
+Pro implementaci byl zvolen jazyk Python (verze~3.8) a vývojové prostředí Jupyter lab, kvůli jeho možnostem snadné vizualizace dat. Implementace byla rozdělena do pěti částí, a to tvorba seznamů skladeb a jim přiřazených žánrů, extrakce atributů, selekce atributů, optimalizace parametrů klasifikačních algoritmů, klasifikace, která zároveň umožňuje vizualizovat výsledky a porovnat úspěšnost klasifikačních algoritmů na jednotlivých sadách atributů a nakonec samotná predikce skladeb z~lokálního archivu pomocí natrénovaných klasifikátorů. Struktura projektu je uvedena v~příloze~\ref{obsah_prilozeneho_dvd}.
 
 \section{Výběr datových sad}
 Jelikož většina skladeb spadá pod privátní licence a není je tak možné volně stáhnout, vhodných dostatečně rozsáhlých datových sad pro účely strojového učení není mnoho. Přesto se však členům MIR komunity v~průběhu let podařilo několik dostatečně rozsáhlých datových sad vytvořit. Datové sady byly vybrány na základě jejich rozsahu, způsobu kategorizace skladeb a vyváženosti jednotlivých kategorií. Pro klasifikaci byly vybrány tři datové sady dohromady obsahující téměř třinácti tisíc třiceti sekundových úseků skladeb.
 
 \subsection*{Datová sada EBD}
-Tuto datovou sadu, s~plným názvem \uv{Extended Ballroom Dataset}, obsahující přes čtyři tisíce třicetisekundových úseků skladeb, vytvořili Geoffroy Peeters a Ugo Marchand jako nástavbu na datovou sadu \uv{Ballroom} roku 2016 \cite{ebd}. Tato datová sada je nevyvážená a skladby dělí do třinácti kategorií podle tanečních stylů. Právě rozřazení podle tanečních stylů bylo důvodem pro její výběr, protože nabízí možnost porovnat důležité atributy pro klasifikaci žánrů a tanečních stylů. Skladby jsou uloženy ve formátu \textit{MP3} se vzorkovací frekvencí 44100~Hz a bitovou hloubkou 16~bitů. Tato datová sada obsahuje skladby spadající pod následující taneční styly:
+Tuto datovou sadu, s~plným názvem \uv{Extended Ballroom Dataset}, obsahující přes čtyři tisíce třicetisekundových úseků skladeb, vytvořili Geoffroy Peeters a Ugo Marchand jako nástavbu na datovou sadu \uv{Ballroom} roku 2016. Tato datová sada je nevyvážená a skladby dělí do třinácti kategorií podle tanečních stylů. Právě rozřazení podle tanečních stylů bylo důvodem pro její výběr, protože nabízí možnost porovnat důležité atributy pro klasifikaci žánrů a tanečních stylů. Skladby jsou uloženy ve formátu \textit{MP3} se vzorkovací frekvencí 44100~Hz a bitovou hloubkou 16~bitů.\cite{ebd}
+
+Tato datová sada obsahuje skladby spadající pod následující taneční styly:
 
 \begin{itemize}
     \item Chacha - 455 skladeb
@@ -574,8 +573,10 @@ Tuto datovou sadu, s~plným názvem \uv{Extended Ballroom Dataset}, obsahující
 \end{itemize}
 
 \subsection*{Datová sada FMA}
-Druhá datová sada nese název \uv{FMA: A~Dataset For Music Analysis} a vytvořili ji v~roce 2016 Michaël Defferrard, Kirell Benzi, Pierre Vandergheynst a Xavier Bresson \cite{fma_dataset}. Tuto datovou sadu je možné stáhnout ve čtyřech verzích, z~nichž první verze je vyvážená a obsahuje osm žánrů po tisíci třicetisekundových úsecích skladeb. Zbylé verze jsou nevyvážené. Druhá verze obsahuje 25000 třicetisekundových úseků skladeb rozřazených do 16
-žánrů. Třetí 106574 třicetisekundových úseků skladeb rozřazených do 161 žánrů a poslední, čtvrtá verze se od třetí liší pouze v~tom, že obsahuje sklady v~plné délce. Tyto skladby byly staženy z~databáze \textit{Free Music Archive}, volně dostupné online databáze skladeb.\footnote{\url{https://freemusicarchive.org/}} Skladby jsou  nahrané ve studiu, z~rádia i přes mikrofon a jsou uloženy ve formátu \textit{MP3} se vzorkovací frekvencí 44100~Hz a bitovou hloubkou 16~bitů. Datová sada byla vybrána jednak kvůli vysokému počtu skladeb a také protože rozřazuje sklady dle méně známých a hůře definovaných žánrů. Pro účely této práce byla vybrána první verze obsahující osm vyvážených žánrů, a to:
+Druhá datová sada nese název \uv{FMA: A~Dataset For Music Analysis} a vytvořili ji v~roce 2016 Michaël Defferrard, Kirell Benzi, Pierre Vandergheynst a Xavier Bresson. Tuto datovou sadu je možné stáhnout ve čtyřech verzích, z~nichž první verze je vyvážená a obsahuje osm žánrů po tisíci třicetisekundových úsecích skladeb. Zbylé verze jsou nevyvážené. Druhá verze obsahuje 25000 třicetisekundových úseků skladeb rozřazených do 16
+žánrů. Třetí 106574 třicetisekundových úseků skladeb rozřazených do 161 žánrů a poslední, čtvrtá verze se od třetí liší pouze v~tom, že obsahuje sklady v~plné délce. Tyto skladby byly staženy z~databáze \textit{Free Music Archive}, volně dostupné online databáze skladeb.\footnote{\url{https://freemusicarchive.org/}} Skladby jsou  nahrané ve studiu, z~rádia i přes mikrofon a jsou uloženy ve formátu \textit{MP3} se vzorkovací frekvencí 44100~Hz a bitovou hloubkou 16~bitů. Datová sada byla vybrána jednak kvůli vysokému počtu skladeb a také protože rozřazuje sklady dle méně známých a hůře definovaných žánrů.\cite{fma_dataset}
+
+Pro účely této práce byla vybrána první verze obsahující osm vyvážených žánrů, a to:
 
 \begin{itemize}
     \item Hiphop
@@ -589,7 +590,9 @@ Druhá datová sada nese název \uv{FMA: A~Dataset For Music Analysis} a vytvoř
 \end{itemize}
 
 \subsection*{Datová sada GTZAN}
-Již v~roce 2002 Tzanetakis a Cook se svou prací zveřejnili datovou sadu s~názvem \uv{GTZAN} obsahující tisíc třiceti sekundových úseků skladeb rovnoměrně rozřazených do desíti žánrů \cite{1021072}. Stejně jako datová sada FMA obsahuje skladby nahrané za různých podmínek a všechny jsou uloženy se vzorkovací frekvencí 22050~Hz a bitovou hloubkou 16~bitů ve formátu \textit{ULAW}. Tato datová sada byla vybrána, jelikož je často používána v~dostupných studiích a slouží tak jako dobrá reference pro porovnání dosažených výsledků vůči ostatním implementacím, a také pro to, že je rozřazena do velmi známých a poměrně úzce definovaných žánrů. Tato datová sada obsahuje žánry:
+Již v~roce 2002 Tzanetakis a Cook se svou prací zveřejnili datovou sadu s~názvem \uv{GTZAN} obsahující tisíc třiceti sekundových úseků skladeb rovnoměrně rozřazených do desíti žánrů. Stejně jako datová sada FMA obsahuje skladby nahrané za různých podmínek a všechny jsou uloženy se vzorkovací frekvencí 22050~Hz a bitovou hloubkou 16~bitů ve formátu \textit{ULAW}. Tato datová sada byla vybrána, jelikož je často používána v~dostupných studiích a slouží tak jako dobrá reference pro porovnání dosažených výsledků vůči ostatním implementacím, a také pro to, že je rozřazena do velmi známých a poměrně úzce definovaných žánrů.\cite{1021072}
+
+Tato datová sada obsahuje žánry:
 
 \begin{itemize}
     \item Blues
@@ -618,11 +621,11 @@ Z~klasifikátorů popsaných v~kapitole~\ref{klasifikacni_algoritmy} bylo vybrá
     \item Extrémní gradient boosting (XGBClassifier) - zástupce ensemble metody boosting 
 \end{itemize}
 
-U~každého klasifikátoru byly nastaveny vhodné parametry pro následnou selekci atributů, optimalizaci parametrů i klasifikaci následovně. Pro každý z~algoritmů, který tyto možnosti podporoval, byl nejprve nastaven parametr \textit{class\_weight} na hodnotu \textit{balanced}, což by mělo zaručit, že i prvky, jejichž třídy jsou v~datové sadě málo početné, ovlivní trénování algoritmu na tolik, že je bude schopen klasifikovat s~obdobnou úspěšností, jako prvky více početné. Dále byl nastaven parametr \textit{n\_jobs} na hodnotu \textit{-1} tak, aby klasifikátory využívali všechna logická jádra procesoru a výpočty tak probíhaly rychleji. U~klasifikátoru \textit{XGBClassifier} pak byl nastaven parametr \textit{tree\_method} na hodnotu \textit{gpu\_hist} a parametr \textit{n\_jobs} na hodnotu \textit{1} tak, aby výpočty byly prováděny na grafickém čipu namísto procesoru. S~dostatečně výkonným grafickým čipem by tak výpočty měly probíhat podstatně rychleji. Parametr \textit{random\_state} byl nastaven na náhodně vybranou hodnotu \textit{42}, což zaručí, že výsledky je možné zpětně reprodukovat a jako poslední pak byl nastaven parametr \textit{max\_iter} na hodnotu \textit{10000}, aby algoritmy měly vždy, kdy to bylo možné, možnost zcela konvergovat k~optimálnímu řešení.
+U~každého klasifikátoru byly nastaveny vhodné parametry pro následnou selekci atributů, optimalizaci parametrů i trénování a klasifikaci následovně. Pro každý z~algoritmů, který tyto možnosti podporoval, byl nejprve nastaven parametr \textit{class\_weight} na hodnotu \textit{balanced}, což by mělo zaručit, že i prvky, jejichž třídy jsou v~datové sadě málo početné, ovlivní trénování algoritmu na tolik, že je bude schopen klasifikovat s~obdobnou úspěšností, jako prvky více početné. Dále byl nastaven parametr \textit{n\_jobs} na hodnotu \textit{-1} tak, aby klasifikátory využívali všechna logická jádra procesoru a výpočty tak probíhaly rychleji. U~klasifikátoru \textit{XGBClassifier} pak byl nastaven parametr \textit{tree\_method} na hodnotu \textit{gpu\_hist} a parametr \textit{n\_jobs} na hodnotu \textit{1} tak, aby výpočty byly prováděny na grafickém čipu namísto procesoru. S~dostatečně výkonným grafickým čipem by tak výpočty měly probíhat podstatně rychleji. Parametr \textit{random\_state} byl nastaven na náhodně vybranou hodnotu \textit{42}, což zaručí, že výsledky je možné zpětně reprodukovat a jako poslední pak byl nastaven parametr \textit{max\_iter} na hodnotu \textit{10000}, aby algoritmy měly vždy, kdy to bylo možné, možnost zcela konvergovat k~optimálnímu řešení.
 
 Dále byly u~klasifikátorů, které podporovali použití různých algoritmů pro nalezení optimálního řešení (Logistická regrese, Vícevrstvý perceptron), jádrových metod (Metody podpůrných vektorů) či struktur pro efektivní vyhledávání dat (K-nejbližších sousedů) otestovány všechny z~těchto možností na každé z~šesti sad atributů. Účelem tohoto testování bylo zjistit, která ze zmíněných možností dosahuje nejvyšší úspěšnosti klasifikace a zároveň je přijatelně výpočetně náročná pro následnou selekci atributů. Na základě těchto výsledků, dostupných v~příloze~\ref{prilohy_k_vyberu_klasifikacnich_algoritmu_a_jejich_parametru}, byly vybrány následující parametry.
 
-Pro Logistickou regresi byl ponechán výchozí algoritmus \textit{LBFGS} a stejně tak pro vícevrstvý perceptron výchozí algoritmus \textit{ADAM}. Pro metodu podpůrných vektorů byla vybrána původní lineární metoda i metoda s~použitím jádrové funkce \textit{RBF}, jelikož obě tyto varianty dosahovaly nejlepších výsledků a každá z~nich může výrazně ovlivnit, jaká sada atributů bude vybrána jako ideální. A~nakonec u~algoritmu K-nejbližších sousedů byla vybrána metoda \textit{brute}, protože žádná z~datových sad není dostatečně obsáhlá na to, aby vytvoření stromových struktur pro ukládání a vyhledávání prvků bylo efektivní. Všechny zvolené parametry, které byly vyhodnoceny jako nejlepší, je možné vidět v~následujícím seznamu.
+Pro Logistickou regresi byl ponechán výchozí algoritmus \textit{Limited-Memory Broyden-Fletcher-Goldfarb-Shanno (LBFGS)} a stejně tak pro vícevrstvý perceptron výchozí algoritmus \textit{ADAM}. Pro metodu podpůrných vektorů byla vybrána původní lineární metoda i metoda s~použitím jádrové funkce \textit{RBF}, jelikož obě tyto varianty dosahovaly nejlepších výsledků a každá z~nich může výrazně ovlivnit, jaká sada atributů bude vybrána jako ideální. A~nakonec u~algoritmu K-nejbližších sousedů byla vybrána metoda \textit{brute}, protože žádná z~datových sad není dostatečně obsáhlá na to, aby vytvoření stromových struktur pro ukládání a vyhledávání prvků bylo efektivní. Všechny zvolené parametry, které byly vyhodnoceny jako nejlepší, je možné vidět v~následujícím seznamu.
 
 \begin{itemize}
     \item LogisticRegression (LR) - $max\_iter:10000$, $class\_weight:balanced$
@@ -631,17 +634,18 @@ Pro Logistickou regresi byl ponechán výchozí algoritmus \textit{LBFGS} a stej
     \item DecisionTreeClassifier (DTC) - $class\_weight:balanced$, $random\_state:42$
     \item SVC\_linear (SVCL) - $kernel:linear$, $class\_weight:balanced$
     \item SVC\_rbf (SVCR) - $kernel:rbf$, $class\_weight:balanced$
-    \item RandomForestClassifier (RFC) - $n\_jobs:-1$, $class\_weight:balanced$, $random\_state:42$
+    \item RandomForestClassifier (RFC) - $n\_jobs:-1$, $class\_weight:balanced$,
+    \newline $random\_state:42$
     \item XGBClassifier (XGBC) - $tree\_method:gpu\_hist$, $n\_jobs:1$, $random\_state:42$
 \end{itemize}
 
 \section{Předzpracování dat}
 \label{NIS_predzpracovani_dat_a_vyber_klasifikacnich_algoritmu}
-Prvním krokem předzpracování dat bylo vytvoření seznamů pojících jednotlivé skladby s~jejich žánrem. Vytvoření takových seznamů bylo nutné, protože u~každé datové sady byly informace o~žánrech zaznamenány jiným způsobem, a to ne vždy vhodným ke zpracování klasifikačními algoritmy. U~datové sady FMA byly potřebné informace extrahovány z~přiloženého souboru .csv, u~datové sady GTZAN byly informace o~žánrech extrahovány z~názvu jednotlivých souborů a u~datové sady EBD pak z~názvů složek, ve kterých byly skladby uloženy. Pro každou z~datových sad byl tedy vytvořen jeden soubor .csv pomocí knihovny Pandas, tvořený dvěma sloupci, kde první obsahuje identifikační číslo skladby a druhý informaci o~žánru dané skladby.
+Prvním krokem předzpracování dat bylo vytvoření seznamů pojících jednotlivé skladby s~jejich žánrem. Vytvoření takových seznamů bylo nutné, protože u~každé datové sady byly informace o~žánrech zaznamenány jiným způsobem, a to ne vždy vhodným ke zpracování klasifikačními algoritmy. U~datové sady FMA byly potřebné informace extrahovány z~přiloženého souboru ve formátu \textit{CSV}, u~datové sady GTZAN byly informace o~žánrech extrahovány z~názvu jednotlivých souborů a u~datové sady EBD pak z~názvů složek, ve kterých byly skladby uloženy. Pro každou z~datových sad byl vytvořen jeden soubor \textit{CSV} pomocí knihovny Pandas, tvořený dvěma sloupci, kde první obsahuje identifikační číslo skladby a druhý informaci o~žánru dané skladby.
 
-Druhým krokem předzpracování dat byla extrakce atributů blíže rozepsaná v~podkapitole~\ref{extrakce_atributu} pomocí funkcí knihoven Librosa a Essentia a jejich následné zpracování pomocí statistických funkcí z~knihoven Numpy a Scipy. Třetím krokem byla selekce atributů přiblížená v~podkapitole~\ref{selekce_atributu}, které bylo dosaženo pomocí dvou obalovacích metod, a to dopředné selekce a zpětné eliminace. Pro správné zpracování atributů klasifikačními algoritmy je však nejprve nutné provést kódování kategorických dat, čehož bylo pro potřeby selekce atributů, optimalizace parametrů i samotné klasifikace dosaženo pomocí algoritmu \textit{One-hot kódování} popsaného v~podkapitole~\ref{kodovani_kategorickych_dat}. Tento způsob kódování byl vybrán kvůli jeho vhodnosti pro nominální kategorická data a dostupné implementaci v~knihovně Sci-kit learn.
+Druhým krokem předzpracování dat byla extrakce atributů, blíže rozepsaná v~podkapitole~\ref{extrakce_atributu}, pomocí funkcí knihoven Librosa a Essentia a jejich následné zpracování pomocí statistických funkcí z~knihoven Numpy a Scipy. Třetím krokem byla selekce atributů přiblížená v~podkapitole~\ref{selekce_atributu}, které bylo dosaženo pomocí dvou obalovacích metod, a to dopředné selekce a zpětné eliminace. Pro správné zpracování atributů klasifikačními algoritmy je však nejprve nutné provést kódování kategorických dat, čehož bylo pro potřeby selekce atributů, optimalizace parametrů i samotného trénování a klasifikace dosaženo pomocí algoritmu \textit{One-hot kódování} popsaného v~podkapitole~\ref{kodovani_kategorickych_dat}. Tento způsob kódování byl vybrán kvůli jeho vhodnosti pro nominální kategorická data a dostupné implementaci v~knihovně Sci-kit learn.
 
-Následně byla data rozdělena na trénovací sadu obsahující 80 \% skladeb a testovací sadu obsahující zbylých 20 \% skladeb, a to tak, aby byl zachován poměr kategorií v~obou sadách. Pro potřeby validace byla implementována křížová validace a klasická validace na validační sadě, vytvořené rozdělením původní trénovací sady opět v~poměru 80/20 \%. Tato rozdělená data pak byla transformována pomocí metody \textit{Z-score normalizace} tak, že pro normalizaci byly využity hodnoty pouze sady trénovací. Testovací a validační sada pak byla transformována bez ohledu na její hodnoty stejným způsobem, jako sada trénovací, což zaručí, že se nedostanou informace o~hodnotách z~těchto sad do sady trénovací. 
+Následně byla data rozdělena na trénovací sadu obsahující 80 \% skladeb a testovací sadu obsahující zbylých 20 \% skladeb, a to tak, aby byl zachován poměr kategorií v~obou sadách. Pro potřeby validace byla implementována křížová validace a klasická validace na validační sadě, vytvořené rozdělením původní trénovací sady opět v~poměru 80/20 \%. Tato rozdělená data pak byla transformována pomocí metody \textit{Z-score normalizace} tak, že pro normalizaci byly využity hodnoty pouze sady trénovací. Testovací a validační sady pak byly transformovány bez ohledu na jejich hodnoty stejným způsobem, jako sada trénovací, což zaručí, že se nedostanou informace o~hodnotách z~těchto sad do sady trénovací. 
 
 \subsection*{Extrakce atributů}
 \label{NIS_extrakce_atributu}
@@ -653,14 +657,14 @@ Samotné skladby každé z~datových sad byly následně zpracovány ve dvou fá
 
 Pro uchování atributů byl využit datový rámec knihovny Pandas, kde každý řádek odpovídá jedné skladbě a je indexován jejím identifikačním číslem, každý sloupec pak odpovídá hodnotě určitého atributu. Protože však některé atributy obsahují více hodnot, sloupce jsou indexovány pomocí více úrovní, kde první úroveň nese název extrahovaného atributu, druhá úroveň odpovídá použité statistické funkci a poslední úroveň slouží k~očíslování jednotlivých hodnot atributů. Po zpracování všech dat byly z~datového rámce odstraněny skladby obsahující chybějící či chybné hodnoty, které by nebylo možné zpracovat klasifikačními algoritmy. Nakonec pak byl datový rámec uložen ve formátu .csv, a to pro každou ze tří datových sad a každou ze dvou knihoven, což dohromady dělá šest souborů obsahující sady atributů.
 
-Pomocí funkcí knihovny Librosa bylo extrahováno celkem čtrnáct atributů uvedených v~obrázku s~diagramem průběhu extrakce~\ref{obr_librosa_extrakce}. Popis těchto atributů je uveden v~oficiální dokumentaci knihovny Librosa.\footnote{https://librosa.github.io/librosa/index.html} Atributy byly extrahovány z~reprezentace zvukové stopy v~časové oblasti a časově-frekvenční oblasti. Pro část spektrálních atributů byl převod do časově-frekvenční oblasti proveden pomocí metody \textit{Constant-Q transform (CQT)} a pro část pomocí metody \textit{STFT}. V~obou případech byla zvolena délka okna 2048 vzorků, což při vzorkovací frekvenci 44100~Hz odpovídá úseku dlouhému přibližně 46~ms. Tato délka by měla být adekvátní pro dostatečné časové i frekvenční rozlišení časově-frekvenční analýzy. Pro rozestup jednotlivých oken byla zvolena hodnota 1024 vzorků. Každé okno se tedy z~poloviny překrývá s~oknem předchozím. což by mělo zaručit dostatečnou přesnost frekvenční analýzy. Nakonec byla v~obou případech okna zpracována okénkovou funkcí typu Hanning.
+Pomocí funkcí knihovny Librosa bylo extrahováno celkem čtrnáct atributů uvedených v~obrázku s~diagramem průběhu extrakce~\ref{obr_librosa_extrakce}. Popis těchto atributů je uveden v~oficiální dokumentaci knihovny Librosa.\footnote{https://librosa.github.io/librosa/index.html} Atributy byly extrahovány z~reprezentace zvukové stopy v~časové oblasti a časově-frekvenční oblasti. Pro část spektrálních atributů byl převod do časově-frekvenční oblasti proveden pomocí metody \textit{Constant-Q transform (CQT)} a pro část pomocí metody \textit{STFT}. V~obou případech byla zvolena délka okna 2048 vzorků, což při vzorkovací frekvenci 44100~Hz odpovídá úseku dlouhému přibližně 46~ms. Tato délka by měla být adekvátní pro dostatečné časové i frekvenční rozlišení časově-frekvenční analýzy. Pro rozestup jednotlivých oken byla zvolena hodnota 1024 vzorků. Každé okno se tedy z~poloviny překrývá s~oknem předchozím. Nakonec byla v~obou případech okna zpracována okénkovou funkcí typu Hanning.
 
-Protože většina atributů je tvořena jednou či více hodnotami pro každé z~oken, kterých je s~výše zvolenými parametry pro třicetisekundovou stopu bezmála 1300, byla i po extrakci dimenzionalita dat příliš vysoká pro zpracování na osobním počítači. Hodnoty atributů napříč všemi okny tak byly zpracovány statistickými funkcemi z~knihoven Numpy a Scipy. Celkem bylo vybráno 7 statistických funkcí, a to průměr, medián, minimální hodnota, maximální hodnota, standardní deviace, koeficient šikmosti distribuce a koeficient špičatosti distribuce. Po zpracování statistickými funkcemi tvoří atributy extrahované pomocí knihovny Librosa celkem 1422 hodnot pro každou skladbu. Extrakce atributů pomocí knihovny Librosa trvala celkem 1 hodinu a 16 minut.
+Protože většina atributů je tvořena jednou či více hodnotami pro každé z~oken, kterých je s~výše zvolenými parametry pro třicetisekundovou stopu bezmála 1300, byla i po extrakci dimenzionalita dat příliš vysoká pro zpracování na osobním počítači. Hodnoty atributů napříč všemi okny tak byly zpracovány statistickými funkcemi z~knihoven Numpy a Scipy. Celkem bylo vybráno 7 statistických funkcí, a to průměr, medián, minimální hodnota, maximální hodnota, směrodatná odchylka, koeficient šikmosti distribuce a koeficient špičatosti distribuce. Po zpracování statistickými funkcemi tvoří atributy extrahované pomocí knihovny Librosa celkem 1422 hodnot pro každou skladbu. Extrakce atributů pomocí knihovny Librosa trvala celkem 1 hodinu a 16 minut.
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/librosa_extrakce.pdf}
-    \caption{\textbf{Diagram průběhu extrakce atributů pomocí funkcí knihovny Librosa.} Z~načtené zvukové stopy je nejprve extrahován atribut \textit{tempo}, poté je stopa rozdělena na okna a je extrahován atribut \textit{zero crossing rate}. Dále je stopa vynásobena okénkovou funkcí a převedena do časově frekvenční oblasti pomocí metody \textit{Constant-Q transform} nebo \textit{Short-time Fourier transform}.  Pro některé z~atributů je toto frekvenční spektrum nakonec převedeno na spektrum energie. Následně je provedena extrakce ostatních atributů.}
+    \caption{\textbf{Diagram průběhu extrakce atributů pomocí funkcí knihovny Librosa.} Z~načtené zvukové stopy je nejprve extrahován atribut \textit{tempo}, poté je stopa rozdělena na okna a je extrahován atribut \textit{zero crossing rate}. Dále je stopa vynásobena okénkovou funkcí a převedena do časově-frekvenční oblasti pomocí metody \textit{Constant-Q transform} nebo \textit{Short-time Fourier transform}. Pro některé z~atributů je toto frekvenční spektrum nakonec převedeno na spektrum energie. Následně je provedena extrakce ostatních atributů.}
     \label{obr_librosa_extrakce}
 \end{figure*}
 
@@ -687,7 +691,7 @@ Počet atributů vybraných pomocí metody dopředné selekce je možné vidět 
         \While {$i=0$ $<$ $len(features[])$}
             \For {$feature$ $in$ $remaining\_features[]$}
                 \State Přidej $feature$ do $best\_features[]$
-                \State Proveď klasifikaci na množine $best\_features[]$
+                \State Proveď klasifikaci na množině $best\_features[]$
                 \If {$score > max\_score$}
                     \State Nastav $max\_score$ na $score$
                     \State Nastav $best\_feature$ na $feature$
@@ -731,7 +735,7 @@ Počet atributů vybraných pomocí metody dopředné selekce je možné vidět 
 
 \subsubsection*{Zpětná eliminace}
 \label{NIS_zpetna_eliminace}
-Počet atributů vybraných pomocí metody zěptné eliminace je možné vidět v~tabulce~\ref{NIS_pocet_atributu_zpetna_eliminace}. Ze 14 atributů extrahovaných pomocí knihovny Librosa bylo vybráno průměrně 10 atributů a z~80 atributů extrahovaných pomocí knihovny Essentia pak 67 atributů. Pseudokód zpětné eliminace je uveden v~algoritmu~\ref{pseudo_algoritmus_zpetne_eliminace}. Selekce pomocí této metody trvala na všech sadách atributů celkem 3 dny, 22 hodin a 53 minut. Informace o~délce běhu pro jednotlivé klasifikátory na každé ze sad atributů jsou uvedeny v~příloze~\ref{prilohy_k_selekci_atributu}.
+Počet atributů vybraných pomocí metody zpětné eliminace je možné vidět v~tabulce~\ref{NIS_pocet_atributu_zpetna_eliminace}. Ze 14 atributů extrahovaných pomocí knihovny Librosa bylo vybráno průměrně 10 atributů a z~80 atributů extrahovaných pomocí knihovny Essentia pak 67 atributů. Pseudokód zpětné eliminace je uveden v~algoritmu~\ref{pseudo_algoritmus_zpetne_eliminace}. Selekce pomocí této metody trvala na všech sadách atributů celkem 3 dny, 22 hodin a 53 minut. Informace o~délce běhu pro jednotlivé klasifikátory na každé ze sad atributů jsou uvedeny v~příloze~\ref{prilohy_k_selekci_atributu}.
 
 \begin{algorithm}
     \caption{Pseudokód zpětné eliminace}
@@ -744,7 +748,7 @@ Počet atributů vybraných pomocí metody zěptné eliminace je možné vidět 
         \While {$i=0$ $<$ $len(features[])$}
             \For {$feature$ $in$ $best\_features[]$}
                 \State Odstraň $feature$ z~$best\_features[]$
-                \State Proveď klasifikaci na množine $best\_features[]$
+                \State Proveď klasifikaci na množině $best\_features[]$
                 \If {$score >= max\_score$}
                     \State Nastav $max\_score$ na $score$
                     \State Nastav $best\_feature$ na $feature$
@@ -836,7 +840,7 @@ Pro optimalizaci parametrů klasifikátorů byla využita knihovna Optuna (verze
 
 Prvním z~nich je algoritmus \textit{GridSampler}, který metodou \textit{vyčerpávajícího hledání (exhaustive search)} prohledává předem definovaný prostor parametrů. Tato metoda tedy vyzkouší každou z~možných kombinací parametrů z~definovaného prostoru, a je tak vždy schopna nalézt optimální řešení. Její nevýhodou je však vysoká výpočetní náročnost, a je tak vhodné ji využít pouze v~případě, kdy prostor parametrů není příliš obsáhlý, či samotný klasifikační algoritmus je velmi málo výpočetně náročný. Tento algoritmus byl využit pro optimalizaci parametrů klasifikátorů \textit{LogisticRegression}, \textit{KNeighborsClassifier}, \textit{SVC\_linear} a \textit{SVC\_rbf}.
 
-Druhým algoritmem je \textit{Tree-structured Parzen Estimator (TPE)}, který nejprve provádí náhodný výběr parametrů z~definovaného prostoru a následně na základě výsledků klasifikace vybírá takové kombinace parametrů, na nichž bylo v~předešlých iteracích dosaženo nejlepších výsledků. Tímto způsobem je tak algoritmus schopen konvergovat k~optimálnímu řešení a je tak vhodný i pro rozsáhlejší prostory parametrů, čí výpočetně náročnější klasifikační algoritmy. Jeho nevýhodou však je, že v~případě, kdy v~prvních iteracích s~náhodným výběrem nejsou zvoleny vhodné kombinace parametrů, může konvergovat k~řešení, které je pouze lokálně optimální. tento algoritmus byl využit pro optimalizaci parametrů klasifikátorů \textit{MLPClassifier}, \textit{DecisionTreeClassifier}, \textit{RandomForestClassifier} a \textit{XGBClassifier}.
+Druhým algoritmem je \textit{Tree-structured Parzen Estimator (TPE)}, který nejprve provádí náhodný výběr parametrů z~definovaného prostoru a následně na základě výsledků klasifikace vybírá takové kombinace parametrů, na nichž bylo v~předešlých iteracích dosaženo nejlepších výsledků. Tímto způsobem je tak algoritmus schopen konvergovat k~optimálnímu řešení a je tak vhodný i pro rozsáhlejší prostory parametrů, či výpočetně náročnější klasifikační algoritmy. Jeho nevýhodou však je, že v~případě, kdy v~prvních iteracích s~náhodným výběrem nejsou zvoleny vhodné kombinace parametrů, může konvergovat k~řešení, které je pouze lokálně optimální. Tento algoritmus byl využit pro optimalizaci parametrů klasifikátorů \textit{MLPClassifier}, \textit{DecisionTreeClassifier}, \textit{RandomForestClassifier} a \textit{XGBClassifier}.
 
 Stejně jako u~selekce atributů byla z~důvodu příliš vysoké výpočetní náročnosti úspěšnost vybraných parametrů testována pomocí validační sady. Samotné prostory parametrů byly zvoleny pomocí řady experimentů na různých kombinacích parametrů, které byly, na základě oficiálních dokumentací knihoven obsahující využité klasifikační algoritmy, vyhodnoceny jako potenciálně blízké hodnotám optimálním. Optimalizace pomocí algoritmu \textit{TPE} byla ukončena vždy, když proběhlo sto iterací, při kterých nebylo dosaženo navýšení skóre. U~obou algoritmů pak na konci každé iterace byly uloženy dosavadní výsledky a také vypsány aktuální informace o~stavu optimalizace. Optimalizované parametry byly uloženy do souboru souboru \textit{optimised\_hyper\_parameters.json}. Optimalizace parametrů všech klasifikátorů na všech sadách atributů trvala celkem 3 dny, 19 hodin a 19 minut.  Informace o~délce běhu pro jednotlivé klasifikátory na každé ze sad atributů jsou uvedeny v~příloze~\ref{prilohy_k_optimalizaci_parametru}. Všechny parametry, jejichž hodnoty byly optimalizovány, je možné vidět v~následujícím seznamu.
 
@@ -844,7 +848,8 @@ Stejně jako u~selekce atributů byla z~důvodu příliš vysoké výpočetní n
     \item LogisticRegression (LR) - \textit{penalty}, \textit{fit\_intercept}, \textit{C}
     \item KNearestNeighbors (KNNC) - \textit{n\_neighbors}, \textit{weights}, \textit{p}
     \item MLPClassifier (MLPC) - \textit{solver}, \textit{hidden\_layer\_sizes}, \textit{activation}, \textit{alpha}, \textit{momentum}, \textit{epsilon}
-    \item DecisionTreeClassifier (DTC) - \textit{criterion}, \textit{min\_samples\_split}, \textit{min\_samples\_leaf}, \textit{max\_features}, \textit{ccp\_alpha}
+    \item DecisionTreeClassifier (DTC) - \textit{criterion}, \textit{min\_samples\_split}, \textit{min\_samples\_leaf},
+    \newline \textit{max\_features}, \textit{ccp\_alpha}
     \item SVC\_linear (SVCL) - \textit{C}
     \item SVC\_rbf (SVCR) - \textit{C}, \textit{gamma}
     \item RandomForestClassifier (RFC) - \textit{criterion}, \textit{min\_samples\_split}, \textit{min\_samples\_leaf}, \textit{max\_features}, \textit{ccp\_alpha}, \textit{max\_samples}
@@ -882,14 +887,14 @@ Vliv optimalizace parametrů na skóre na validačních sadách je možné vidě
 \begin{figure*}[h]
     \centering
     \includegraphics[width=\textwidth]{obrazky/TPESampler_optimisation.pdf}
-    \caption{\textbf{Ukázka průběhu optimalizace parametrů pomocí algoritmu \textit{TPESampler}.} V obrázku je možné vidět průběh optimalizace klasifikátoru \textit{XGBClassifier} na datové sadě GTZAN až po nejlepší iteraci. Červená čárna značí průměrné skóre sta následujících iterací. Z obrázku je patrný postupný nárůst skóre, jak optimalizační algoritmus konverguje k optimálním hodnotám parametrů.}
+    \caption{\textbf{Ukázka průběhu optimalizace parametrů pomocí algoritmu \textit{TPESampler}.} V~obrázku je možné vidět průběh optimalizace klasifikátoru \textit{XGBClassifier} na datové sadě GTZAN až po nejlepší iteraci. Červená čára značí průměrné skóre sta následujících iterací. Z~obrázku je patrný postupný nárůst skóre, jak optimalizační algoritmus konverguje k~optimálním hodnotám parametrů.}
     \label{obr_TPE_optimalizace}
 \end{figure*}
 
 \chapter{Klasifikace a zhodnocení výsledků}
 \label{klasifikace_a_zhodnoceni_vysledku}
 
-Úspěšnost selekce atributů na testovacích sadách je možné vidět v~tabulce~\ref{tabulka_selekce_atributu_zlepseni_testovaci_sada}. Z~výsledků je patrné, že na testovacích sadách selekce atributů nedosáhla zdaleka tak vysokého nárůstu úspěšnosti klasifikace, jako na sadách validačních. Na podmnožině atributů získaných pomocí metody dopředné selekce bylo dokonce průměrné skóre o~0.36 \% horší, než na celé množině atributů. Na podmnožině získané pomocí metody zpětné eliminace pak bylo průměrně skóre o~1.09 \% vyšší. Toto dramatické snížení úspěšnosti klasifikace na testovací sadě je pravděpodobně způsobeno nedostatečnou velikostí datových sad a také použitím validace na jediné sadě, namísto křížové validace na několika sadách. 
+Úspěšnost selekce atributů na testovacích sadách je možné vidět v~tabulce~\ref{tabulka_selekce_atributu_zlepseni_testovaci_sada}. Z~výsledků je patrné, že na testovacích sadách selekce atributů nedosáhla zdaleka tak vysokého nárůstu úspěšnosti klasifikace, jako na sadách validačních. Na podmnožině atributů získaných pomocí metody dopředné selekce bylo dokonce průměrné skóre o~0.36 \% nižší, než na celé množině atributů. Na podmnožině získané pomocí metody zpětné eliminace pak bylo průměrně skóre o~1.09 \% vyšší. Toto dramatické snížení úspěšnosti klasifikace na testovací sadě je pravděpodobně způsobeno nedostatečnou velikostí datových sad a také použitím validace na jediné sadě, namísto křížové validace na několika sadách. 
 
 \begin{table}[H]
 	\vskip6pt
@@ -935,7 +940,7 @@ Vliv optimalizace parametrů na skóre na validačních sadách je možné vidě
     \end{tabular}}
 \end{table}
 
-Úspěšnost klasifikace klasifikátorů s~výchozími parametry je možné vidět v~tabulce~\ref{score_default_test_set} a klasifikátorů s~optimalizovanými parametry v~tabulce~\ref{score_optimised_test_set}. Dobu trénování a klasifikace pak v~příloze~\ref{prilohy_ke_klasifikaci_a_zhodnoceni_vysledku}. Nejvyšší skóre na datové sadě EBD činilo 86.48 \% a bylo dosaženo pomocí klasifikátoru \textit{XGBClassifier} s~výchozími parametry na podmnožině atributů získané pomocí metody zpětné eliminace. Na datové sadě FMA bylo nejlepšího skóre 64.56 \% dosaženo opět pomocí klasifikátoru \textit{XGBClassifier}, tentokrát však s~optimalizovanými parametry a na celé množině atributů. Na datové sadě GTZAN pak bylo nejlepšího skóre 82.00 \% dosaženo hned ve čtyřech případech. V~prvním z~nich pomocí optimalizovaného klasifikátoru \textit{MLPClassifier} na celé množině atributů, v~druhém a třetím pak pomocí klasifikátoru \textit{SVC} bez použití jádrové metody, a to jak s~výchozími, tak optimalizovanými parametry na celé množině atributů. V~posledním případě pak opět pomocí klasifikátoru \textit{SVC}, tentokrát však s~použitím jádrové metody \textit{RBF} a optimalizovanými parametry na podmnožině atributů získané pomocí metody zpětné eliminace.
+Úspěšnost klasifikace klasifikátorů s~výchozími parametry je možné vidět v~tabulce~\ref{score_default_test_set} a klasifikátorů s~optimalizovanými parametry v~tabulce~\ref{score_optimised_test_set}. Dobu trénování a klasifikace pak v~příloze~\ref{prilohy_ke_klasifikaci_a_zhodnoceni_vysledku}. Nejvyšší skóre na datové sadě EBD činilo 86.48 \% a bylo dosaženo pomocí klasifikátoru \textit{XGBClassifier} s~výchozími parametry na podmnožině atributů získané pomocí metody zpětné eliminace. Na datové sadě FMA bylo nejlepšího skóre 64.56 \% dosaženo opět pomocí klasifikátoru \textit{XGBClassifier}, tentokrát však s~optimalizovanými parametry a na celé množině atributů. Na datové sadě GTZAN pak bylo nejlepšího skóre 82.00 \% dosaženo hned ve čtyřech případech. V~prvním z~nich pomocí optimalizovaného klasifikátoru \textit{MLPClassifier} na celé množině atributů, v~druhém a třetím pak pomocí klasifikátoru \textit{SVC} bez použití jádrové metody, a to jak s~výchozími, tak s~optimalizovanými parametry na celé množině atributů. V~posledním případě pak opět pomocí klasifikátoru \textit{SVC}, tentokrát však s~použitím jádrové metody \textit{RBF} a optimalizovanými parametry na podmnožině atributů získané pomocí metody zpětné eliminace.
 
 \begin{table}[H]
 	\vskip6pt
@@ -979,13 +984,13 @@ Vliv optimalizace parametrů na skóre na validačních sadách je možné vidě
 
 Na základě výsledků uvedených v~posledních dvou kapitolách je tak možné prohlásit, že na daných třech datových sadách se extrahované atributy ukázaly být všechny hodnotné a na místo jejich selekce tak bylo výhodnější je ponechat všechny, pouze pak optimalizovat parametry klasifikačních algoritmů, které by pomocí vestavěných metod selekce případné nevhodné atributy vyřadily až v~průběhu trénování. Jako nejúspěšnější klasifikační algoritmy se ukázaly být \textit{XGBClassifier}, \textit{MLPClassifier} a \textit{SVC}.
 
-Vzhledem k~těmto poznatkům tak byla pro každou z~datových sad provedena finální optimalizace parametrů těchto nejúspěšnějších klasifikátorů na celé množině atributů. Tentokrát však byla úspěšnost zvolených parametrů vyhodnocována pomocí pětinásobné křížové validace, což by mělo zaručit, že optimalizace bude ještě úspěšnější. Tento předpoklad se však ukázal být pravdivý pouze v~některých případech. Konkrétně bylo dosaženo zvýšení skóre o~0.12 \% u~klasifikátoru \textit{MLPClassifier} na datové sadě FMA a u~klasifikátoru \textit{XGBClassifier} o~1.2 \% u~datové sady EBD a o~2.5 \% u~datové sady GTZAN. V~ostatních případech dosahovalo skóre stejné či nižší úspěšnosti, jako u~optimalizace s~využitím validace pomocí validační sady. Zmíněný nárůst skóre u~klasifikátoru \textit{XGBClassifier} však byl dostatečný na to, aby byl tento nyní nejúspěšnější ze všech klasifikačních algoritmů na všech datových sadách.
+Vzhledem k~těmto poznatkům tak byla pro každou z~datových sad provedena finální optimalizace parametrů těchto nejúspěšnějších klasifikátorů na celé množině atributů. Tentokrát však byla úspěšnost zvolených parametrů vyhodnocena pomocí pětinásobné křížové validace, což by mělo zaručit, že optimalizace bude ještě úspěšnější. Tento předpoklad se však ukázal být pravdivý pouze v~některých případech. Konkrétně bylo dosaženo zvýšení skóre o~0.12 \% u~klasifikátoru \textit{MLPClassifier} na datové sadě FMA a u~klasifikátoru \textit{XGBClassifier} o~1.2 \% u~datové sady EBD a o~2.5 \% u~datové sady GTZAN. V~ostatních případech byla úspěšnost klasifikace stejná či nižší, jako u~parametrů optimalizovaných s~využitím validace pomocí validační sady. Zmíněný nárůst skóre u~klasifikátoru \textit{XGBClassifier} však byl dostatečný na to, aby byl tento nyní nejúspěšnější ze všech klasifikačních algoritmů na všech datových sadách.
 
-Tato finální optimalizace parametrů trvala celkem 3 dny, 3 hodiny a 24 minut. Podrobné informace o~finální optimalizaci a také matice predikcí nejúspěšnějších klasifikátorů je možné nalézt v~tabulce v~příloze~\ref{prilohy_ke_klasifikaci_a_zhodnoceni_vysledku}. Optimalizované hodnoty parametrů nejúspěšnějších klasifikátorů je možné vidět v~tabulce~\ref{best_parameters}. Nejúspěšnější natrénované klasifikátory byly uloženy a je možné je využít pro predikci a anotaci žánrů skladeb z~lokálního archivu.
+Tato finální optimalizace parametrů trvala celkem 3 dny, 3 hodiny a 24 minut. Podrobné informace o~finální optimalizaci a také matice predikcí nejúspěšnějších klasifikátorů je možné nalézt v~příloze~\ref{prilohy_ke_klasifikaci_a_zhodnoceni_vysledku}. Optimalizované hodnoty parametrů nejúspěšnějších klasifikátorů je možné vidět v~tabulce~\ref{best_parameters}. Nejúspěšnější natrénované klasifikátory byly uloženy a je možné je využít pro predikci a anotaci žánrů skladeb z~lokálního archivu.
 
 \begin{table}[H]
 	\vskip6pt
-    \caption{\textbf{Nejúspěšnější parametry pro klasifikátor \textit{XGBClassifier} pro každou z~datových sad.} Parametr \textit{n\_estimators} značí počet iterací (počet základních klasifikátorů). Parametr \textit{learning\_rate} značí rychlost učení, tento parametr nebyl optimalizován, jeho hodnota byla pouze snížena z~výchozí hodnoty kvůli možnosti přesnější optimalizace. Parametr \textit{max\_depth} značí maximální hloubku základních klasifikátorů (rozhodovacích stromů). Parametr \textit{min\_child\_weight} značí minimální součet vah prvků v~poduzlech děleného uzlu. Parametr \textit{subsample} značí velikost množiny prvků, na které je každý základní klasifikátor natrénován. Parametr \textit{colsample\_bytree} značí velikost množiny atributů, na které je každý základní klasifikátor natrénován. Parametr \textit{reg\_alpha} značí hodnotu \uv{intenzity} L1 regularizace.  Parametr \textit{reg\_lambda} značí hodnotu \uv{intenzity} L2 regularizace. Parametr \textit{gamma} značí značí hodnotu \uv{intenzity} pseudo regularizace.}
+    \caption{\textbf{Nejúspěšnější parametry pro klasifikátor \textit{XGBClassifier} pro každou z~datových sad.} Parametr \textit{n\_estimators} značí počet iterací (počet základních klasifikátorů). Parametr \textit{learning\_rate} značí rychlost učení, tento parametr nebyl optimalizován, jeho hodnota byla pouze snížena z~výchozí hodnoty kvůli možnosti přesnější optimalizace. Parametr \textit{max\_depth} značí maximální hloubku základních klasifikátorů (rozhodovacích stromů). Parametr \textit{min\_child\_weight} značí minimální povolený součet vah prvků v~poduzlech děleného uzlu. Parametr \textit{subsample} značí velikost množiny prvků, na které je každý základní klasifikátor natrénován. Parametr \textit{colsample\_bytree} značí velikost množiny atributů, na které je každý základní klasifikátor natrénován. Parametr \textit{reg\_alpha} značí hodnotu intenzity L1 regularizace.  Parametr \textit{reg\_lambda} značí hodnotu intenzity L2 regularizace. Parametr \textit{gamma} značí hodnotu intenzity pseudo regularizace.}
     \label{best_parameters}  
     \vskip6pt
 	\centering
@@ -1009,7 +1014,7 @@ Tato finální optimalizace parametrů trvala celkem 3 dny, 3 hodiny a 24 minut.
 
 \begin{table}[H]
 	\vskip6pt
-    \caption{\textbf{Tabulka nejvyššího dosaženého skóre a doby trvání trénování a klasifikace pro každou z~datových sad.} Ve všech případech bylo dosaženo pomocí klasifikačního algoritmu \textit{XGBClassifier} s~optimalizovanými parametry a na množině všech atributů. Nižší úspěšnost klasifikace na datové sadě FMA je možné vysvětlit tím, že dělí skladby do velmi nejednoznačně definovaných žánrů.}
+    \caption{\textbf{Tabulka nejvyššího dosaženého skóre a doby trvání trénování a klasifikace pro každou z~datových sad.} Ve všech případech bylo nejvyššího skóre dosaženo pomocí klasifikačního algoritmu \textit{XGBClassifier} s~optimalizovanými parametry a na množině všech atributů. Nižší úspěšnost klasifikace na datové sadě FMA je možné vysvětlit tím, že dělí skladby do velmi nejednoznačně definovaných žánrů.}
     \label{score_optimised_CV_test_set}  
     \vskip6pt
 	\centering
@@ -1025,9 +1030,9 @@ Tato finální optimalizace parametrů trvala celkem 3 dny, 3 hodiny a 24 minut.
 
 \chapter{Závěr}
 \label{zaver}
-Tato práce se zabývá klasifikací hudebních souborů dle žánrů či tanečních stylů pomocí algoritmů strojového učení. Je zde popsán teoretický základ k~pochopení šíření, záznamu a uchování zvukových vln a také několika klasifikačních algoritmů. Porovnány byly také dvě metody selekce atributů, a to dopředná selekce a zpětná eliminace. Na ani jedné z~datových sad se však selekce neosvědčila a klasifikátory s~optimalizovanými parametry byly v~drtivé většině případů schopny na celé množině atributů dosáhnout stejného či vyššího skóre.
+Tato práce se zabývá klasifikací hudebních souborů dle žánrů či tanečních stylů pomocí algoritmů strojového učení. Je zde popsán teoretický základ k~pochopení šíření, záznamu a uchování zvukových vln a také několika klasifikačních algoritmů. Porovnány byly také dvě metody selekce atributů, a to dopředná selekce a zpětná eliminace. Na ani jedné z~datových sad se však selekce neosvědčila a klasifikátory s~optimalizovanými parametry byly v~drtivé většině případů schopny na celé množině atributů dosáhnout stejné či vyšší úspěšnosti klasifikace.
 
-Jako nejúspěšnější se ukázal být model \textit{XGBClassifier}, který dosáhl nejvyšší úspěšnosti klasifikace na všech třech datových sadách. Výsledky klasifikace dosáhly 86.48 \% na datové sadě \uv{Extended Ballroom Dataset} rozřazené dle třinácti tanečních stylů, 64.56 \% na datové sadě \uv{A~Dataset For Music Analysis} rozřazené dle osmi hudebních žánrů a 82.00 \% na datové sadě \uv{GTZAN} rozřazené dle desíti hudebních žánrů.
+Jako nejúspěšnější se ukázal být model \textit{XGBClassifier}, který dosáhl nejvyšší úspěšnosti klasifikace na všech třech datových sadách. Výsledky klasifikace dosáhly 87.56 \% na datové sadě \uv{Extended Ballroom Dataset} rozřazené dle třinácti tanečních stylů, 64.56 \% na datové sadě \uv{FMA: A~Dataset For Music Analysis} rozřazené dle osmi hudebních žánrů a 83.50 \% na datové sadě \uv{GTZAN} rozřazené dle desíti hudebních žánrů.
 
 Velmi dobrých výsledků však dosáhl i klasifikátor \textit{MLPClassifier}, který byl zároveň podstatně rychlejší, než klasifikátor \textit{XGBClassifier}. Jelikož klasifikátor \textit{MLPClassifier} je pouze velmi jednoduchým případem vícevrstvého perceptronu, zajímavou oblastí dalšího výzkumu by mohla být klasifikace pomocí pečlivě navržených neuronových sítí, které by mohly dosáhnout stejné či vyšší úspěšnosti klasifikace, a to rychleji, než metody posilování gradientu. Pomocí neuronových sítí by také bylo potenciálně možné klasifikovat neupravené hudební soubory a zcela se tak vyhnout extrakci atributů.
 

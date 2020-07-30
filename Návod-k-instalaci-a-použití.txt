@@ -17,7 +17,7 @@ Spuštění prostředí Jupyter lab a návod k použití projektu:
     z horního menu aplikace možností Run -> Run Selected Cells
     Aplikace byla testována na operačním systému Ubuntu verze 20.04
 
-    Pro spuštění na jiných Linux systémech (je nutné mít Python verze 3):
+    Pro spuštění na jiných Linux systémech (je nutné mít Python verze 3 a pip):
         1. Nainstalujte tyto balíčky: npm nodejs python3-venv python3-pip ffmpeg
         2. Otevřete terminálové okno ve složce s tímto souborem
         3. Vytvořte virtuální prostředí příkazem "python3 -m venv env"

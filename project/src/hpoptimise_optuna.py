@@ -471,7 +471,7 @@ class HPoptimise(object):
         study: Current study object
         trial: Current trial object
         '''
-        if trial.number - study.best_trial.number == self._max_trials_no_change:
+        if trial.number - study.best_trial.number >= self._max_trials_no_change:
             study.stop()           
             
     def _save_study(self, study, trial):
