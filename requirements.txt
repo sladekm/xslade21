@@ -1,6 +1,6 @@
 jupyterlab==2.2.2
 pandas==1.0.5
-numpy==1.19.1
+numpy==1.22.0
 scipy==1.5.2
 soundfile==0.10.3.post1
 librosa==0.8.0
